@@ -1,8 +1,9 @@
-<?xml version="1.0" encoding = "Windows-1252"?>
+<?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="7.00"
+	Version="7.10"
 	Name="Hashish"
+	ProjectGUID="{287BE075-699E-4157-913C-CC6FB3061804}"
 	SccProjectName=""
 	SccLocalPath="">
 	<Platforms>
@@ -20,10 +21,10 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=""
+				AdditionalIncludeDirectories="$(WXWIN)\include;$(WXWIN)\lib\mswd;..\src"
 				PreprocessorDefinitions="_DEBUG,WIN32,_WINDOWS,WINVER=0x400,_MT,wxUSE_GUI=1,__WXDEBUG__,WXDEBUG=1"
 				RuntimeLibrary="3"
-				UsePrecompiledHeader="2"
+				UsePrecompiledHeader="0"
 				PrecompiledHeaderFile=".\Debug/Hashish.pch"
 				AssemblerListingLocation=".\Debug/"
 				ObjectFile=".\Debug/"
@@ -37,11 +38,11 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib wsock32.lib zlibd.lib regexd.lib pngd.lib jpegd.lib tiffd.lib wxmswd.lib cryptlib.lib"
+				AdditionalDependencies="odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib wsock32.lib zlibd.lib regexd.lib pngd.lib jpegd.lib tiffd.lib wxmswd.lib"
 				OutputFile=".\Debug/Hashish.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
-				AdditionalLibraryDirectories=""
+				AdditionalLibraryDirectories="$(WXWIN)\lib"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile=".\Debug/Hashish.pdb"
 				SubSystem="2"/>
@@ -61,7 +62,13 @@
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
 				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
@@ -115,9 +122,17 @@
 			<Tool
 				Name="VCWebServiceProxyGeneratorTool"/>
 			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
 				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 	</Configurations>
+	<References>
+	</References>
 	<Files>
 		<Filter
 			Name="Source Files"
@@ -128,12 +143,190 @@
 			<File
 				RelativePath="..\src\main.cpp">
 			</File>
+			<Filter
+				Name="CryptoPP"
+				Filter="">
+				<File
+					RelativePath="..\src\crypto\algparam.cpp">
+				</File>
+				<File
+					RelativePath="..\src\crypto\algparam.h">
+				</File>
+				<File
+					RelativePath="..\src\crypto\argnames.h">
+				</File>
+				<File
+					RelativePath="..\src\crypto\base64.cpp">
+				</File>
+				<File
+					RelativePath="..\src\crypto\base64.h">
+				</File>
+				<File
+					RelativePath="..\src\crypto\basecode.cpp">
+				</File>
+				<File
+					RelativePath="..\src\crypto\basecode.h">
+				</File>
+				<File
+					RelativePath="..\src\crypto\config.h">
+				</File>
+				<File
+					RelativePath="..\src\crypto\crc.cpp">
+				</File>
+				<File
+					RelativePath="..\src\crypto\crc.h">
+				</File>
+				<File
+					RelativePath="..\src\crypto\cryptlib.cpp">
+				</File>
+				<File
+					RelativePath="..\src\crypto\cryptlib.h">
+				</File>
+				<File
+					RelativePath="..\src\crypto\files.cpp">
+				</File>
+				<File
+					RelativePath="..\src\crypto\files.h">
+				</File>
+				<File
+					RelativePath="..\src\crypto\filters.cpp">
+				</File>
+				<File
+					RelativePath="..\src\crypto\filters.h">
+				</File>
+				<File
+					RelativePath="..\src\crypto\fips140.cpp">
+				</File>
+				<File
+					RelativePath="..\src\crypto\fips140.h">
+				</File>
+				<File
+					RelativePath="..\src\crypto\fltrimpl.h">
+				</File>
+				<File
+					RelativePath="..\src\crypto\haval.cpp">
+				</File>
+				<File
+					RelativePath="..\src\crypto\haval.h">
+				</File>
+				<File
+					RelativePath="..\src\crypto\hex.cpp">
+				</File>
+				<File
+					RelativePath="..\src\crypto\hex.h">
+				</File>
+				<File
+					RelativePath="..\src\crypto\iterhash.cpp">
+				</File>
+				<File
+					RelativePath="..\src\crypto\iterhash.h">
+				</File>
+				<File
+					RelativePath="..\src\crypto\md2.cpp">
+				</File>
+				<File
+					RelativePath="..\src\crypto\md2.h">
+				</File>
+				<File
+					RelativePath="..\src\crypto\md5.cpp">
+				</File>
+				<File
+					RelativePath="..\src\crypto\md5.h">
+				</File>
+				<File
+					RelativePath="..\src\crypto\misc.cpp">
+				</File>
+				<File
+					RelativePath="..\src\crypto\misc.h">
+				</File>
+				<File
+					RelativePath="..\src\crypto\mqueue.cpp">
+				</File>
+				<File
+					RelativePath="..\src\crypto\mqueue.h">
+				</File>
+				<File
+					RelativePath="..\src\crypto\panama.cpp">
+				</File>
+				<File
+					RelativePath="..\src\crypto\panama.h">
+				</File>
+				<File
+					RelativePath="..\src\crypto\pch.cpp">
+				</File>
+				<File
+					RelativePath="..\src\crypto\pch.h">
+				</File>
+				<File
+					RelativePath="..\src\crypto\queue.cpp">
+				</File>
+				<File
+					RelativePath="..\src\crypto\queue.h">
+				</File>
+				<File
+					RelativePath="..\src\crypto\ripemd.cpp">
+				</File>
+				<File
+					RelativePath="..\src\crypto\ripemd.h">
+				</File>
+				<File
+					RelativePath="..\src\crypto\secblock.h">
+				</File>
+				<File
+					RelativePath="..\src\crypto\seckey.h">
+				</File>
+				<File
+					RelativePath="..\src\crypto\sha.cpp">
+				</File>
+				<File
+					RelativePath="..\src\crypto\sha.h">
+				</File>
+				<File
+					RelativePath="..\src\crypto\simple.cpp">
+				</File>
+				<File
+					RelativePath="..\src\crypto\simple.h">
+				</File>
+				<File
+					RelativePath="..\src\crypto\smartptr.h">
+				</File>
+				<File
+					RelativePath="..\src\crypto\strciphr.cpp">
+				</File>
+				<File
+					RelativePath="..\src\crypto\strciphr.h">
+				</File>
+				<File
+					RelativePath="..\src\crypto\tiger.cpp">
+				</File>
+				<File
+					RelativePath="..\src\crypto\tiger.h">
+				</File>
+				<File
+					RelativePath="..\src\crypto\tigertab.cpp">
+				</File>
+				<File
+					RelativePath="..\src\crypto\trdlocal.cpp">
+				</File>
+				<File
+					RelativePath="..\src\crypto\trdlocal.h">
+				</File>
+				<File
+					RelativePath="..\src\crypto\words.h">
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Resource Files"
 			Filter="ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe">
 			<File
 				RelativePath=".\launch.rc">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCResourceCompilerTool"
+						AdditionalIncludeDirectories="$(WXWIN)\include"/>
+				</FileConfiguration>
 				<FileConfiguration
 					Name="Release|Win32">
 					<Tool
@@ -154,6 +347,9 @@
 		</File>
 		<File
 			RelativePath=".\win32\gnu.txt">
+		</File>
+		<File
+			RelativePath=".\hashish_setup_gen.nsi">
 		</File>
 		<File
 			RelativePath=".\win32\readme.txt">
