@@ -1,0 +1,37 @@
+Copyright (C) 2002 Jesse Lovelace, A. S. Logic Systems Co.
+
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+	
+Hashish
+File and string hashing for Windows and Unix
+
+UNIX:
+
+Hashish requires wxGTK (http://www.wxwindows.org)
+and Crypto++ (http://www.cryptopp.com) to be 
+installed/compiled in order to run.
+
+Win32:
+
+Hashish requires wxMSW and Crypto++ to compile.  Use
+provided project files to build in VC++.
+
+Mac OSX:
+
+Not tested but should work if you compile in Codewarrior.
+
+
+Jesse Lovelace
+<jllovela@eos.ncsu.edu>

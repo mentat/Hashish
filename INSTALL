@@ -1,0 +1,21 @@
+To install Hashish you must download:
+
+wxGTK 2.3.2 - http://www.wxwindows.org
+Crypto++ 4.2 - http://www.cryptopp.com
+
+Build wxGTK and install it.
+
+Unzip Crypto++ using 'unzip -a crypto42.zip' in 
+ a directory named crypto which should be one 
+ level below the Hashish dir (../).
+
+Build Crypto++ using provided makefile ('GNUMakefile')
+ make -f GNUMakefile
+
+Build hashish using provided makefile:
+ make
+
+Copy to your bin dir.  The executable name is 'hashish'
+
+
+Thanks! configure script coming soon...
