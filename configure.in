@@ -1,45 +1,30 @@
-dnl Process this file with autoconf to produce a configure script.
+AC_PREREQ(2.57)
 AC_INIT(src/main.cpp)
-AM_INIT_AUTOMAKE(Hashish, 1.1a)
-dnl Checks for programs.
+AM_INIT_AUTOMAKE(hashish, 1.1b)
+
+# Checks for programs.
 AC_PROG_CXX
+AC_PROG_CXXCPP
 AC_PROG_INSTALL
 
+dnl check for wxWindows installation¤
+AM_PATH_WXCONFIG(2.4.1,wxOK=1)
 
-#AM_PATH_GTK(1.2.3 , , AC_MSG_ERROR(Cannot find GTK: Is gtk-config in path?))
-dnl check for wx-config
-WX_PATH_WXCONFIG(2.3.1, WXCONFIG=1)
-if test "$WXCONFIG" != 1; then
-    AC_MSG_ERROR([
-            Please check that wx-config is in path, the directory
-            where wxWindows libraries are installed (returned by
-            'wx-config --libs' command) is in LD_LIBRARY_PATH or
-            equivalent variable and wxWindows is version 2.3.1 or above.
-    ])
+if test "$wxOK" != 1; then
+   AC_MSG_ERROR([
+	   YardSale requires wxWindows to be installed on your system
+	   but wx-config script couldn't be found.
+
+	   Please check that wx-config is in PATH, the directory
+	   where wxWindows libraries are installed (returned by
+	   'wx-config --libs' command) is in LD_LIBRARY_PATH or
+	   equivalent variable and wxWindows version is 2.5.1 or above.
+   ])
 fi
 
+dnl normal linking mode is fully dynamic
 
-   AC_CHECK_HEADER(cryptopp/cryptlib.h, ,
-                AC_MSG_WARN([*** Crypto++ headers not found.]))
-        
-AC_ARG_ENABLE(static,
-	[  --enable-static	Builds static and strips.], [
-	echo "Building rpm..."
-	RPM="yes"])
-
-if test "$RPM" = "yes"; then
-	LIBS="${WX_STATIC} -lcryptopp"
-else
-	LIBS="${WX_LIBS} -lcryptopp"
-fi
-
-CXXFLAGS="${CXXFLAGS} ${WX_CXXFLAGS} -fexceptions"
-
-dnl Checks for libraries.
-
-dnl Checks for header files.
-AC_HEADER_STDC
-AC_CHECK_HEADERS(cryptopp/cryptopp.h fcntl.h sys/time.h unistd.h)
-
-
-AC_OUTPUT( src/Makefile Makefile )
+AC_CONFIG_FILES([Makefile
+                 src/Makefile
+		 ])
+AC_OUTPUT
