@@ -7,16 +7,39 @@ NAMESPACE_BEGIN(CryptoPP)
 
 //! <a href="http://www.weidai.com/scan-mirror/md.html#RIPEMD-160">RIPEMD-160</a>
 /*! Digest Length = 160 bits */
-class RIPEMD160 : public IteratedHashWithStaticTransform<word32, LittleEndian, 64, RIPEMD160>
+class RIPEMD160 : public IteratedHashWithStaticTransform<word32, LittleEndian, 64, 20, RIPEMD160>
 {
 public:
-	enum {DIGESTSIZE = 20};
-	RIPEMD160() : IteratedHashWithStaticTransform<word32, LittleEndian, 64, RIPEMD160>(DIGESTSIZE) {Init();}
+	static void InitState(HashWordType *state);
 	static void Transform(word32 *digest, const word32 *data);
 	static const char * StaticAlgorithmName() {return "RIPEMD-160";}
+};
 
-protected:
-	void Init();
+/*! Digest Length = 320 bits, Security = 160 bits */
+class RIPEMD320 : public IteratedHashWithStaticTransform<word32, LittleEndian, 64, 40, RIPEMD320>
+{
+public:
+	static void InitState(HashWordType *state);
+	static void Transform(word32 *digest, const word32 *data);
+	static const char * StaticAlgorithmName() {return "RIPEMD-320";}
+};
+
+/*! Digest Length = 128 bits */
+class RIPEMD128 : public IteratedHashWithStaticTransform<word32, LittleEndian, 64, 16, RIPEMD128>
+{
+public:
+	static void InitState(HashWordType *state);
+	static void Transform(word32 *digest, const word32 *data);
+	static const char * StaticAlgorithmName() {return "RIPEMD-128";}
+};
+
+/*! Digest Length = 256 bits, Security = 128 bits */
+class RIPEMD256 : public IteratedHashWithStaticTransform<word32, LittleEndian, 64, 32, RIPEMD256>
+{
+public:
+	static void InitState(HashWordType *state);
+	static void Transform(word32 *digest, const word32 *data);
+	static const char * StaticAlgorithmName() {return "RIPEMD-256";}
 };
 
 NAMESPACE_END

@@ -1,5 +1,4 @@
 INCLUDES = -Icrypto/ -I.
-CXXFLAGS = $(WX_CXXFLAGS)
 
 bin_PROGRAMS = hashish
 
@@ -33,6 +32,7 @@ hashish_SOURCES = \
    crypto/trdlocal.cpp \
    crypto/tigertab.cpp
 
+hashish_CXXFLAGS = $(WX_CXXFLAGS)
 hashish_LDADD = $(WX_LIBS)
 
 EXTRA_DIST = \

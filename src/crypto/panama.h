@@ -10,7 +10,7 @@ NAMESPACE_BEGIN(CryptoPP)
 
 /// base class, do not use directly
 template <class B>
-class Panama
+class CRYPTOPP_NO_VTABLE Panama
 {
 public:
 	void Reset();
@@ -26,63 +26,94 @@ protected:
 
 /// <a href="http://www.weidai.com/scan-mirror/md.html#Panama">Panama Hash</a>
 template <class B = LittleEndian>
-class PanamaHash : protected Panama<B>, public IteratedHash<word32, NativeByteOrder, 32>
+class PanamaHash : protected Panama<B>, public AlgorithmImpl<IteratedHash<word32, NativeByteOrder, 32>, PanamaHash<B> >
 {
 public:
 	enum {DIGESTSIZE = 32};
-	PanamaHash() : IteratedHash<word32, NativeByteOrder, 32>(0) {Panama<B>::Reset();}
+	PanamaHash() {Panama<B>::Reset();}
 	unsigned int DigestSize() const {return DIGESTSIZE;}
 	void TruncatedFinal(byte *hash, unsigned int size);
+	static const char * StaticAlgorithmName() {return B::ToEnum() == BIG_ENDIAN_ORDER ? "Panama-BE" : "Panama-LE";}
 
 protected:
 	void Init() {Panama<B>::Reset();}
-	void vTransform(const word32 *data) {Iterate(1, data);}	// push
+	void HashEndianCorrectedBlock(const word32 *data) {this->Iterate(1, data);}	// push
 	unsigned int HashMultipleBlocks(const word32 *input, unsigned int length);
 };
 
-//! .
-template <class B = LittleEndian>
-class PanamaMAC_Base : public PanamaHash<B>, public VariableKeyLength<32, 0, UINT_MAX>, public MessageAuthenticationCode
+//! MAC construction using a hermetic hash function
+template <class T_Hash, class T_Info = T_Hash>
+class HermeticHashFunctionMAC : public AlgorithmImpl<SimpleKeyingInterfaceImpl<TwoBases<MessageAuthenticationCode, VariableKeyLength<32, 0, UINT_MAX> > >, T_Info>
 {
 public:
-	void UncheckedSetKey(const byte *userKey, unsigned int keylength)
+	void SetKey(const byte *key, unsigned int length, const NameValuePairs &params = g_nullNameValuePairs)
 	{
-		m_key.Assign(userKey, keylength);
+		m_key.Assign(key, length);
 		Restart();
 	}
 
-	static const char * StaticAlgorithmName() {return B::ToEnum() == BIG_ENDIAN ? "Panama-BE" : "Panama-LE";}
-
-protected:
-	void Init()
+	void Restart()
 	{
-		PanamaHash<B>::Init();
-		Update(m_key, m_key.size());
+		m_hash.Restart();
+		m_keyed = false;
 	}
 
+	void Update(const byte *input, unsigned int length)
+	{
+		if (!m_keyed)
+			KeyHash();
+		m_hash.Update(input, length);
+	}
+
+	void TruncatedFinal(byte *digest, unsigned int digestSize)
+	{
+		if (!m_keyed)
+			KeyHash();
+		m_hash.TruncatedFinal(digest, digestSize);
+		m_keyed = false;
+	}
+
+	unsigned int DigestSize() const
+		{return m_hash.DigestSize();}
+	unsigned int BlockSize() const
+		{return m_hash.BlockSize();}
+	unsigned int OptimalBlockSize() const
+		{return m_hash.OptimalBlockSize();}
+	unsigned int OptimalDataAlignment() const
+		{return m_hash.OptimalDataAlignment();}
+
+protected:
+	void KeyHash()
+	{
+		m_hash.Update(m_key, m_key.size());
+		m_keyed = true;
+	}
+
+	T_Hash m_hash;
+	bool m_keyed;
 	SecByteBlock m_key;
 };
 
 /// Panama MAC
 template <class B = LittleEndian>
-class PanamaMAC : public MessageAuthenticationCodeTemplate<PanamaMAC_Base<B> >
+class PanamaMAC : public HermeticHashFunctionMAC<PanamaHash<B> >
 {
 public:
  	PanamaMAC() {}
-	PanamaMAC(const byte *key, unsigned int length=PanamaMAC_Base<B>::DEFAULT_KEYLENGTH)
-		{SetKey(key, length);}
+	PanamaMAC(const byte *key, unsigned int length)
+		{this->SetKey(key, length);}
 };
 
-//! .
+//! algorithm info
 template <class B>
 struct PanamaCipherInfo : public VariableKeyLength<32, 32, 64, 32, SimpleKeyingInterface::NOT_RESYNCHRONIZABLE>
 {
 	static const char * StaticAlgorithmName() {return B::ToEnum() == BIG_ENDIAN_ORDER ? "Panama-BE" : "Panama-LE";}
 };
 
-//! .
+//! _
 template <class B>
-class PanamaCipherPolicy : public AdditiveCipherConcretePolicy<word32, 32>, 
+class PanamaCipherPolicy : public AdditiveCipherConcretePolicy<word32, 8>, 
 							public PanamaCipherInfo<B>,
 							protected Panama<B>
 {
@@ -96,7 +127,7 @@ protected:
 template <class B = LittleEndian>
 struct PanamaCipher : public PanamaCipherInfo<B>, public SymmetricCipherDocumentation
 {
-	typedef SymmetricCipherFinalTemplate<ConcretePolicyHolder<PanamaCipherPolicy<B>, AdditiveCipherTemplate<> > > Encryption;
+	typedef SymmetricCipherFinal<ConcretePolicyHolder<PanamaCipherPolicy<B>, AdditiveCipherTemplate<> > > Encryption;
 	typedef Encryption Decryption;
 };
 

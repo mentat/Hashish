@@ -6,22 +6,22 @@
 
 NAMESPACE_BEGIN(CryptoPP)
 
-template <class T, class BASE>
-IteratedHashBase<T, BASE>::IteratedHashBase(unsigned int blockSize, unsigned int digestSize)
-	: m_data(blockSize/sizeof(T)), m_digest(digestSize/sizeof(T))
-	, m_countHi(0), m_countLo(0)
+HashInputTooLong::HashInputTooLong(const std::string &alg)
+	: InvalidDataFormat("IteratedHashBase: input data exceeds maximum allowed by hash function " + alg)
 {
 }
 
 template <class T, class BASE> void IteratedHashBase<T, BASE>::Update(const byte *input, unsigned int len)
 {
-	HashWordType tmp = m_countLo;
-	if ((m_countLo = tmp + len) < tmp)
+	HashWordType oldCountLo = m_countLo, oldCountHi = m_countHi;
+	if ((m_countLo = oldCountLo + len) < oldCountLo)
 		m_countHi++;             // carry from low to high
 	m_countHi += SafeRightShift<8*sizeof(HashWordType)>(len);
+	if (m_countHi < oldCountHi)
+		throw HashInputTooLong(AlgorithmName());
 
 	unsigned int blockSize = BlockSize();
-	unsigned int num = ModPowerOf2(tmp, blockSize);
+	unsigned int num = ModPowerOf2(oldCountLo, blockSize);
 
 	if (num != 0)	// process left over data
 	{
@@ -110,13 +110,5 @@ template <class T, class BASE> void IteratedHashBase<T, BASE>::Restart()
 	m_countLo = m_countHi = 0;
 	Init();
 }
-
-#ifdef WORD64_AVAILABLE
-template class IteratedHashBase<word64, HashTransformation>;
-template class IteratedHashBase<word64, MessageAuthenticationCode>;
-#endif
-
-template class IteratedHashBase<word32, HashTransformation>;
-template class IteratedHashBase<word32, MessageAuthenticationCode>;
 
 NAMESPACE_END

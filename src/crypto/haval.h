@@ -17,13 +17,16 @@ public:
 	void TruncatedFinal(byte *hash, unsigned int size);
 	unsigned int DigestSize() const {return digestSize;}
 
+	static const char * StaticAlgorithmName() {return "HAVAL";}
+	std::string AlgorithmName() const {return std::string("HAVAL(") + IntToString(digestSize) + "," + IntToString(pass) + ")";}
+
 protected:
 	static const unsigned int wi2[32], wi3[32], wi4[32], wi5[32];
 	static const word32 mc2[32], mc3[32], mc4[32], mc5[32];
 
 	void Init();
 	void Tailor(unsigned int FPTLEN);
-	void vTransform(const word32 *in);
+	void HashEndianCorrectedBlock(const word32 *in);
 
 	const unsigned int digestSize, pass;
 };
