@@ -46,6 +46,11 @@ wxSizer *MainDiag( wxWindow *parent, bool call_fit = TRUE, bool set_sizer = TRUE
 #define ID_MENU_HEX 10011
 #define ID_MENU_64 10012
 #define ID_MENU_ABOUT 10013
+#define ID_MENU_EDIT_CUT 10014
+#define ID_MENU_EDIT_COPY 10015
+#define ID_MENU_EDIT_CLEAR 10016
+#define ID_MENU_EDIT_PASTE 10017
+
 wxMenuBar *MainMenu();
 
 // Declare toolbar functions

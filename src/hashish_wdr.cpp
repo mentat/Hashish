@@ -84,7 +84,9 @@ wxSizer *MainDiag( wxWindow *parent, bool call_fit, bool set_sizer )
         "HAVAL-5", 
         "RIPEMD-160", 
         "Tiger", 
-        "Panama Hash", 
+#ifndef __WXMAC__
+	"Panama Hash",
+#endif	
         "CRC-32", 
         "Sapphire Hash"
     };
@@ -121,19 +123,25 @@ wxMenuBar *MainMenu()
     wxMenuBar *item0 = new wxMenuBar;
     
     wxMenu* item1 = new wxMenu;
-    item1->Append( ID_MENU_OPEN, "Open File", "" );
+    item1->Append( ID_MENU_OPEN, "&Open File", "Open a file to hash" );
     item1->AppendSeparator();
-    item1->Append( ID_MENU_QUIT, "Quit", "" );
-    item0->Append( item1, "File" );
+    item1->Append( ID_MENU_QUIT, "&Quit", "Quit Hashish (you'll be back :))" );
+    item0->Append( item1, "&File" );
+    wxMenu* edit = new wxMenu;
+    edit->Append( ID_MENU_EDIT_CUT, "C&ut", "Cut the hash value to the clipboard");
+    edit->Append( ID_MENU_EDIT_COPY, "&Copy", "Copy the hash value to the clipboard");
+    edit->Append( ID_MENU_EDIT_PASTE, "&Paste", "Paste a string from the clipboard");
+    edit->Append( ID_MENU_EDIT_CLEAR, "C&lear", "Clear the hash value");
+    item0->Append( edit, "&Edit");
     
     wxMenu* item2 = new wxMenu;
-    item2->Append( ID_MENU_HEX, "Hex (Base 16)", "", TRUE );
-    item2->Append( ID_MENU_64, "Base 64", "", TRUE );
-    item0->Append( item2, "Encoding" );
-    
+    item2->Append( ID_MENU_HEX, "Hex (Base &16)", "Use hex encoding", TRUE );
+    item2->Append( ID_MENU_64, "Base &64", "Use base 64 encoding", TRUE );
+    item0->Append( item2, "E&ncoding" );
+
     wxMenu* item3 = new wxMenu;
-    item3->Append( ID_MENU_ABOUT, "About Hashish", "" );
-    item0->Append( item3, "About" );
+    item3->Append( ID_MENU_ABOUT, "About &Hashish", "" );
+    item0->Append( item3, "&About" );
     
     return item0;
 }

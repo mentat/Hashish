@@ -19,19 +19,21 @@ File and string hashing for Windows and Unix
 
 UNIX:
 
-Hashish requires wxGTK (http://www.wxwindows.org)
-and Crypto++ (http://www.cryptopp.com) to be 
-installed/compiled in order to run.
+Hashish requires wxGTK 2.3.1 (http://www.wxwindows.org)
+and Crypto++ 4.2 (http://www.cryptopp.com) to be 
+installed/compiled in order to compile.  To run, Hashish needs
+wxWindows to be installed and the shared object to be in the path.
 
 Win32:
 
 Hashish requires wxMSW and Crypto++ to compile.  Use
-provided project files to build in VC++.
+provided project files to build in VC++. The bin Win32
+package includes an installer.
 
 Mac OSX:
 
-Not tested but should work if you compile in Codewarrior.
-
+Please download binary packet for OSX from:
+http://www.sf.net/projects/hashish
 
 Jesse Lovelace
 <jllovela@eos.ncsu.edu>

@@ -1,21 +1,22 @@
-To install Hashish you must download:
+Hashish Basic Installation
+==================
 
-wxGTK 2.3.2 - http://www.wxwindows.org
-Crypto++ 4.2 - http://www.cryptopp.com
+	1) ./configure
+	2) make
+	3) make install
 
-Build wxGTK and install it.
+The configure script will check to see if you have wxWindows 2.3.1
+or better installed on your system.  If you do not have this installed
+please download it from http://www.wxwindows.org
 
-Unzip Crypto++ using 'unzip -a crypto42.zip' in 
- a directory named crypto which should be one 
- level below the Hashish dir (../).
+The files will also try to link to CryptoPP 4.2 located in $(libdir),
+which is usually /usr/local/lib and the file name is libcryptopp.a.  
+The CryptoPP headers should be in $(includedir)/cryptopp, this is
+usually /usr/local/include/cryptopp
 
-Build Crypto++ using provided makefile ('GNUMakefile')
- make -f GNUMakefile
+Download CryptoPP from http://www.cryptopp.com
 
-Build hashish using provided makefile:
- make
+If you have questions/comments, email the author:
 
-Copy to your bin dir.  The executable name is 'hashish'
-
-
-Thanks! configure script coming soon...
+Jesse Lovelace
+jllovela@eos.ncsu.edu

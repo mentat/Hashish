@@ -31,7 +31,7 @@ AC_ARG_WITH(wx-exec-prefix,[  --with-wx-exec-prefix=PREFIX Exec prefix where wxW
   fi
 
   AC_PATH_PROG(WX_CONFIG, wx-config, no)
-  min_wx_version=ifelse([$1], ,2.2.9,$1)
+  min_wx_version=ifelse([$1], ,2.3.1,$1)
   AC_MSG_CHECKING(for wxWindows version >= $min_wx_version)
   no_wx=""
   if test "$WX_CONFIG" = "no" ; then
@@ -39,6 +39,7 @@ AC_ARG_WITH(wx-exec-prefix,[  --with-wx-exec-prefix=PREFIX Exec prefix where wxW
   else
     WX_CFLAGS=`$WX_CONFIG $wx_config_args --cflags`
     WX_LIBS=`$WX_CONFIG $wx_config_args --libs`
+    WX_STATIC=`$WX_CONFIG $wx_config_args --static --libs`
     wx_config_major_version=`$WX_CONFIG $wx_config_args --version | \
            sed 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\)/\1/'`
     wx_config_minor_version=`$WX_CONFIG $wx_config_args --version | \
@@ -54,8 +55,10 @@ AC_ARG_WITH(wx-exec-prefix,[  --with-wx-exec-prefix=PREFIX Exec prefix where wxW
      AC_MSG_RESULT(no)
      WX_CFLAGS=""
      WX_LIBS=""
+     WX_STATIC=""
      ifelse([$3], , :, [$3])
   fi
   AC_SUBST(WX_CFLAGS)
   AC_SUBST(WX_LIBS)
+  AC_SUBST(WX_STATIC)
 ])

@@ -1,0 +1,7 @@
+all: hashish
+main.o: main.cpp hashish_wdr.h
+	g++ -c main.cpp `wx-config --cxxflags`
+hashish_wdr.o: hashish_wdr.h
+	g++ -c hashish_wdr.cpp `wx-config --cxxflags`
+hashish: main.o hashish_wdr.o
+	g++ -o hashish main.o hashish_wdr.o `wx-config --cxxflags` `wx-config --static --libs` -lcryptopp

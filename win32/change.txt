@@ -1,9 +1,0 @@
-BETA 0.1
-
-	* Initial Release
-
-BETA 0.4
-
-	* Added file drag and drop
-	* Released unix builds
-	* Added HAVAL 3-5, CRC32, and Sapphire Hash

@@ -18,8 +18,18 @@ if test "$WXCONFIG" != 1; then
     ])
 fi
 
+AC_ARG_WITH(rpm,
+	[  --with-rpm		Builds static and strips.], [
+	echo "Building rpm..."
+	RPM="yes"])
+
+if test "$RPM" = "yes"; then
+	LDFLAGS="${LDFLAGS} ${WX_STATIC}"
+else
+	LDFLAGS="${LDFLAGS} ${WX_LIBS}"
+fi
+
 CXXFLAGS="${CXXFLAGS} ${WX_CFLAGS}"
-LDFLAGS="${LDFLAGS} ${WX_LIBS}"
 
 dnl Checks for libraries.
 
