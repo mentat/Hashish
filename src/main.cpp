@@ -1,7 +1,7 @@
 /**********  Hashish - Cross platform hasing utility *************/
 // --*-c++-*--
 /*
-    $Id: main.cpp,v 1.4 2002/07/08 01:47:28 thementat Exp $
+    $Id: main.cpp,v 1.5 2002/07/09 16:05:28 thementat Exp $
  
     Hashish - Cross platform hasing utility
     Copyright (C) 2002  Jesse Lovelace, A. S. Logic Systems Co.
@@ -22,6 +22,9 @@
 
     -----
     $Log: main.cpp,v $
+    Revision 1.5  2002/07/09 16:05:28  thementat
+    Updating to 1.0
+
     Revision 1.4  2002/07/08 01:47:28  thementat
     Modifications for MAC build.
 
@@ -49,7 +52,7 @@
 #include "wx/choicdlg.h"
 #include "wx/file.h"
 
-#ifndef __WXMAC__
+#if (!defined (__WXMAC__)) && (!defined (__WXX11__))
 #include "wx/dnd.h"
 #endif
 
@@ -119,7 +122,7 @@ protected:
 class MyFrame : public wxFrame
 {
 public:
-#ifndef __WXMAC__
+#if (!defined (__WXMAC__)) && (!defined (__WXX11__))
     friend class DnDFile;
 #endif
     MyFrame(const wxString& title, const wxPoint& pos, const wxSize& size);
@@ -151,7 +154,7 @@ private:
     
     DECLARE_EVENT_TABLE()
 };
-#ifndef __WXMAC__
+#if (!defined (__WXMAC__)) && (!defined (__WXX11__))
 class DnDFile : public wxFileDropTarget
 {
 
@@ -234,7 +237,7 @@ MyFrame::MyFrame(const wxString& title, const wxPoint& pos, const wxSize& size)
   CreateStatusBar();
  
   wxPanel * pTopPanel = new wxPanel(this);
-#ifndef __WXMAC__
+#if (!defined __WXMAC__) && (!defined (__WXX11))
   pTopPanel->SetDropTarget(new DnDFile(this));
 #endif
   wxSizer * pPanelSizer = MainDiag(pTopPanel, true,  true);  

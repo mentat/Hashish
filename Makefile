@@ -63,6 +63,7 @@ PACKAGE = Hashish
 VERSION = 1.0
 WX_CFLAGS = -I/usr/local/lib/wx/include/gtkd-2.3 -I/usr/local/include -D__WXDEBUG__ -D__WXGTK__
 WX_CONFIG = /usr/local/bin/wx-config
+WX_CXXFLAGS = -I/usr/local/lib/wx/include/gtkd-2.3 -I/usr/local/include -D__WXDEBUG__ -D__WXGTK__
 WX_LIBS = -L/usr/local/lib -lwx_gtkd-2.3
 WX_STATIC = -L/usr/local/lib   /usr/local/lib/libwx_gtkd-2.3.a -L/usr/lib -L/usr/X11R6/lib -lgtk -lgdk -rdynamic -lgmodule -lgthread -lglib -lpthread -ldl -lXi -lXext -lX11 -lm -lpng -ljpeg -ltiff -lz -ldl -lm -pthread 
 

@@ -18,18 +18,18 @@ if test "$WXCONFIG" != 1; then
     ])
 fi
 
-AC_ARG_WITH(rpm,
-	[  --with-rpm		Builds static and strips.], [
+AC_ARG_ENABLE(static,
+	[  --enable-static	Builds static and strips.], [
 	echo "Building rpm..."
 	RPM="yes"])
 
 if test "$RPM" = "yes"; then
-	LDFLAGS="${LDFLAGS} ${WX_STATIC}"
+	LIBS="${WX_STATIC} -lcryptopp"
 else
-	LDFLAGS="${LDFLAGS} ${WX_LIBS}"
+	LIBS="${WX_LIBS} -lcryptopp"
 fi
 
-CXXFLAGS="${CXXFLAGS} ${WX_CFLAGS}"
+CXXFLAGS="${CXXFLAGS} ${WX_CXXFLAGS} -fexceptions"
 
 dnl Checks for libraries.
 

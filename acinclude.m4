@@ -40,6 +40,7 @@ AC_ARG_WITH(wx-exec-prefix,[  --with-wx-exec-prefix=PREFIX Exec prefix where wxW
     WX_CFLAGS=`$WX_CONFIG $wx_config_args --cflags`
     WX_LIBS=`$WX_CONFIG $wx_config_args --libs`
     WX_STATIC=`$WX_CONFIG $wx_config_args --static --libs`
+    WX_CXXFLAGS=`$WX_CONFIG $wx_config_args --cxxflags`
     wx_config_major_version=`$WX_CONFIG $wx_config_args --version | \
            sed 's/\([[0-9]]*\).\([[0-9]]*\).\([[0-9]]*\)/\1/'`
     wx_config_minor_version=`$WX_CONFIG $wx_config_args --version | \
@@ -56,9 +57,11 @@ AC_ARG_WITH(wx-exec-prefix,[  --with-wx-exec-prefix=PREFIX Exec prefix where wxW
      WX_CFLAGS=""
      WX_LIBS=""
      WX_STATIC=""
+     WX_CXXFLAGS=""
      ifelse([$3], , :, [$3])
   fi
   AC_SUBST(WX_CFLAGS)
   AC_SUBST(WX_LIBS)
+  AC_SUBST(WX_CXXFLAGS)
   AC_SUBST(WX_STATIC)
 ])
