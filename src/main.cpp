@@ -263,7 +263,7 @@ void HashFrame::OnQuit(wxCommandEvent& event)
 
 void HashFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
 {
-    wxMessageBox(_T("Hashish 1.1\n© 2003 Jesse Lovelace\n"
+    wxMessageBox(_T("Hashish 1.1\n© 2003-2004 Jesse Lovelace\n"
 			    "\nGNU General Public License\n\n"
 			    "Visit the Hashish website:\n"
 			    "http://hashish.sf.net"),

@@ -66,33 +66,78 @@ PATH_SEPARATOR = @PATH_SEPARATOR@
 AMTAR = @AMTAR@
 AWK = @AWK@
 CXX = @CXX@
+CXXCPP = @CXXCPP@
 DEPDIR = @DEPDIR@
 INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
 PACKAGE = @PACKAGE@
+STRIP = @STRIP@
 VERSION = @VERSION@
 WX_CFLAGS = @WX_CFLAGS@
-WX_CONFIG = @WX_CONFIG@
+WX_CFLAGS_ONLY = @WX_CFLAGS_ONLY@
+WX_CONFIG_PATH = @WX_CONFIG_PATH@
+WX_CPPFLAGS = @WX_CPPFLAGS@
 WX_CXXFLAGS = @WX_CXXFLAGS@
+WX_CXXFLAGS_ONLY = @WX_CXXFLAGS_ONLY@
 WX_LIBS = @WX_LIBS@
-WX_STATIC = @WX_STATIC@
+WX_LIBS_STATIC = @WX_LIBS_STATIC@
+WX_VERSION = @WX_VERSION@
 am__include = @am__include@
 am__quote = @am__quote@
 install_sh = @install_sh@
-INCLUDES = $(WXFLAGS) -Icrypto -I.
+INCLUDES = -Icrypto/ -I.
+CXXFLAGS = $(WX_CXXFLAGS)
 
 EXTRA_DIST = hash.ico Hashish-1.1a-1.spec Makefile.rpm gnu_small_trans.xpm gnu_small_trans.bmp
-bin_PROGRAMS = hashish
 
-hashish_LDLIBS = $(WXLIBS)
+bin_PROGRAMS = hashish
+hashish_SOURCES = \
+main.cpp \
+hashish_wdr.cpp \
+hashish_wdr.h\
+crypto/algparam.cpp \
+crypto/base64.cpp \
+crypto/basecode.cpp \
+crypto/crc.cpp \
+crypto/cryptlib.cpp \
+crypto/files.cpp \
+crypto/filters.cpp \
+crypto/haval.cpp \
+crypto/hex.cpp \
+crypto/iterhash.cpp \
+crypto/md2.cpp \
+crypto/md5.cpp \
+crypto/misc.cpp \
+crypto/mqueue.cpp \
+crypto/panama.cpp \
+crypto/pch.cpp \
+crypto/ripemd.cpp \
+crypto/sha.cpp \
+crypto/strciphr.cpp \
+crypto/tiger.cpp \
+crypto/simple.cpp \
+crypto/queue.cpp \
+crypto/fips140.cpp \
+crypto/trdlocal.cpp \
+crypto/tigertab.cpp
+
+
+hashish_LDADD = $(WX_LIBS)
 subdir = src
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_CLEAN_FILES =
 bin_PROGRAMS = hashish$(EXEEXT)
 PROGRAMS = $(bin_PROGRAMS)
 
-hashish_SOURCES = hashish.c
-hashish_OBJECTS = hashish.$(OBJEXT)
-hashish_LDADD = $(LDADD)
+am_hashish_OBJECTS = main.$(OBJEXT) hashish_wdr.$(OBJEXT) \
+	algparam.$(OBJEXT) base64.$(OBJEXT) basecode.$(OBJEXT) \
+	crc.$(OBJEXT) cryptlib.$(OBJEXT) files.$(OBJEXT) \
+	filters.$(OBJEXT) haval.$(OBJEXT) hex.$(OBJEXT) \
+	iterhash.$(OBJEXT) md2.$(OBJEXT) md5.$(OBJEXT) misc.$(OBJEXT) \
+	mqueue.$(OBJEXT) panama.$(OBJEXT) pch.$(OBJEXT) \
+	ripemd.$(OBJEXT) sha.$(OBJEXT) strciphr.$(OBJEXT) \
+	tiger.$(OBJEXT) simple.$(OBJEXT) queue.$(OBJEXT) \
+	fips140.$(OBJEXT) trdlocal.$(OBJEXT) tigertab.$(OBJEXT)
+hashish_OBJECTS = $(am_hashish_OBJECTS)
 hashish_DEPENDENCIES =
 hashish_LDFLAGS =
 
@@ -103,20 +148,38 @@ LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
-@AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/hashish.Po
+@AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/algparam.Po ./$(DEPDIR)/base64.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/basecode.Po ./$(DEPDIR)/crc.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/cryptlib.Po ./$(DEPDIR)/files.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/filters.Po ./$(DEPDIR)/fips140.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/hashish_wdr.Po ./$(DEPDIR)/haval.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/hex.Po ./$(DEPDIR)/iterhash.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/main.Po ./$(DEPDIR)/md2.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/md5.Po ./$(DEPDIR)/misc.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/mqueue.Po ./$(DEPDIR)/panama.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/pch.Po ./$(DEPDIR)/queue.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/ripemd.Po ./$(DEPDIR)/sha.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/simple.Po ./$(DEPDIR)/strciphr.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/tiger.Po ./$(DEPDIR)/tigertab.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/trdlocal.Po
+CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
+	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
+CXXLD = $(CXX)
+CXXLINK = $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) $(AM_LDFLAGS) $(LDFLAGS) \
+	-o $@
+CFLAGS = @CFLAGS@
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 CCLD = $(CC)
 LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
-CFLAGS = @CFLAGS@
-DIST_SOURCES = hashish.c
+DIST_SOURCES = $(hashish_SOURCES)
 DIST_COMMON = Makefile.am Makefile.in
-SOURCES = hashish.c
+SOURCES = $(hashish_SOURCES)
 
 all: all-am
 
 .SUFFIXES:
-.SUFFIXES: .c .o .obj
+.SUFFIXES: .cpp .o .obj
 $(srcdir)/Makefile.in:  Makefile.am  $(top_srcdir)/configure.in $(ACLOCAL_M4)
 	cd $(top_srcdir) && \
 	  $(AUTOMAKE) --gnu  src/Makefile
@@ -146,9 +209,34 @@ uninstall-binPROGRAMS:
 
 clean-binPROGRAMS:
 	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS)
+algparam.$(OBJEXT): crypto/algparam.cpp
+base64.$(OBJEXT): crypto/base64.cpp
+basecode.$(OBJEXT): crypto/basecode.cpp
+crc.$(OBJEXT): crypto/crc.cpp
+cryptlib.$(OBJEXT): crypto/cryptlib.cpp
+files.$(OBJEXT): crypto/files.cpp
+filters.$(OBJEXT): crypto/filters.cpp
+haval.$(OBJEXT): crypto/haval.cpp
+hex.$(OBJEXT): crypto/hex.cpp
+iterhash.$(OBJEXT): crypto/iterhash.cpp
+md2.$(OBJEXT): crypto/md2.cpp
+md5.$(OBJEXT): crypto/md5.cpp
+misc.$(OBJEXT): crypto/misc.cpp
+mqueue.$(OBJEXT): crypto/mqueue.cpp
+panama.$(OBJEXT): crypto/panama.cpp
+pch.$(OBJEXT): crypto/pch.cpp
+ripemd.$(OBJEXT): crypto/ripemd.cpp
+sha.$(OBJEXT): crypto/sha.cpp
+strciphr.$(OBJEXT): crypto/strciphr.cpp
+tiger.$(OBJEXT): crypto/tiger.cpp
+simple.$(OBJEXT): crypto/simple.cpp
+queue.$(OBJEXT): crypto/queue.cpp
+fips140.$(OBJEXT): crypto/fips140.cpp
+trdlocal.$(OBJEXT): crypto/trdlocal.cpp
+tigertab.$(OBJEXT): crypto/tigertab.cpp
 hashish$(EXEEXT): $(hashish_OBJECTS) $(hashish_DEPENDENCIES) 
 	@rm -f hashish$(EXEEXT)
-	$(LINK) $(hashish_LDFLAGS) $(hashish_OBJECTS) $(hashish_LDADD) $(LIBS)
+	$(CXXLINK) $(hashish_LDFLAGS) $(hashish_OBJECTS) $(hashish_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT) core *.core
@@ -156,23 +244,349 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/hashish.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/algparam.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/base64.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/basecode.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/crc.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cryptlib.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/files.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/filters.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fips140.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/hashish_wdr.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/haval.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/hex.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/iterhash.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/md2.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/md5.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/misc.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mqueue.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/panama.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pch.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/queue.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ripemd.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sha.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/simple.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/strciphr.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/tiger.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/tigertab.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/trdlocal.Po@am__quote@
 
 distclean-depend:
 	-rm -rf ./$(DEPDIR)
 
-.c.o:
+.cpp.o:
 @AMDEP_TRUE@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@	depfile='$(DEPDIR)/$*.Po' tmpdepfile='$(DEPDIR)/$*.TPo' @AMDEPBACKSLASH@
-@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-	$(COMPILE) -c `test -f '$<' || echo '$(srcdir)/'`$<
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CXXCOMPILE) -c -o $@ `test -f '$<' || echo '$(srcdir)/'`$<
 
-.c.obj:
+.cpp.obj:
 @AMDEP_TRUE@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@	depfile='$(DEPDIR)/$*.Po' tmpdepfile='$(DEPDIR)/$*.TPo' @AMDEPBACKSLASH@
-@AMDEP_TRUE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-	$(COMPILE) -c `cygpath -w $<`
-CCDEPMODE = @CCDEPMODE@
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CXXCOMPILE) -c -o $@ `cygpath -w $<`
+
+algparam.o: crypto/algparam.cpp
+@AMDEP_TRUE@	source='crypto/algparam.cpp' object='algparam.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/algparam.Po' tmpdepfile='$(DEPDIR)/algparam.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o algparam.o `test -f 'crypto/algparam.cpp' || echo '$(srcdir)/'`crypto/algparam.cpp
+
+algparam.obj: crypto/algparam.cpp
+@AMDEP_TRUE@	source='crypto/algparam.cpp' object='algparam.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/algparam.Po' tmpdepfile='$(DEPDIR)/algparam.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o algparam.obj `cygpath -w crypto/algparam.cpp`
+
+base64.o: crypto/base64.cpp
+@AMDEP_TRUE@	source='crypto/base64.cpp' object='base64.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/base64.Po' tmpdepfile='$(DEPDIR)/base64.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o base64.o `test -f 'crypto/base64.cpp' || echo '$(srcdir)/'`crypto/base64.cpp
+
+base64.obj: crypto/base64.cpp
+@AMDEP_TRUE@	source='crypto/base64.cpp' object='base64.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/base64.Po' tmpdepfile='$(DEPDIR)/base64.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o base64.obj `cygpath -w crypto/base64.cpp`
+
+basecode.o: crypto/basecode.cpp
+@AMDEP_TRUE@	source='crypto/basecode.cpp' object='basecode.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/basecode.Po' tmpdepfile='$(DEPDIR)/basecode.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o basecode.o `test -f 'crypto/basecode.cpp' || echo '$(srcdir)/'`crypto/basecode.cpp
+
+basecode.obj: crypto/basecode.cpp
+@AMDEP_TRUE@	source='crypto/basecode.cpp' object='basecode.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/basecode.Po' tmpdepfile='$(DEPDIR)/basecode.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o basecode.obj `cygpath -w crypto/basecode.cpp`
+
+crc.o: crypto/crc.cpp
+@AMDEP_TRUE@	source='crypto/crc.cpp' object='crc.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/crc.Po' tmpdepfile='$(DEPDIR)/crc.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o crc.o `test -f 'crypto/crc.cpp' || echo '$(srcdir)/'`crypto/crc.cpp
+
+crc.obj: crypto/crc.cpp
+@AMDEP_TRUE@	source='crypto/crc.cpp' object='crc.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/crc.Po' tmpdepfile='$(DEPDIR)/crc.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o crc.obj `cygpath -w crypto/crc.cpp`
+
+cryptlib.o: crypto/cryptlib.cpp
+@AMDEP_TRUE@	source='crypto/cryptlib.cpp' object='cryptlib.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/cryptlib.Po' tmpdepfile='$(DEPDIR)/cryptlib.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o cryptlib.o `test -f 'crypto/cryptlib.cpp' || echo '$(srcdir)/'`crypto/cryptlib.cpp
+
+cryptlib.obj: crypto/cryptlib.cpp
+@AMDEP_TRUE@	source='crypto/cryptlib.cpp' object='cryptlib.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/cryptlib.Po' tmpdepfile='$(DEPDIR)/cryptlib.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o cryptlib.obj `cygpath -w crypto/cryptlib.cpp`
+
+files.o: crypto/files.cpp
+@AMDEP_TRUE@	source='crypto/files.cpp' object='files.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/files.Po' tmpdepfile='$(DEPDIR)/files.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o files.o `test -f 'crypto/files.cpp' || echo '$(srcdir)/'`crypto/files.cpp
+
+files.obj: crypto/files.cpp
+@AMDEP_TRUE@	source='crypto/files.cpp' object='files.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/files.Po' tmpdepfile='$(DEPDIR)/files.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o files.obj `cygpath -w crypto/files.cpp`
+
+filters.o: crypto/filters.cpp
+@AMDEP_TRUE@	source='crypto/filters.cpp' object='filters.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/filters.Po' tmpdepfile='$(DEPDIR)/filters.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o filters.o `test -f 'crypto/filters.cpp' || echo '$(srcdir)/'`crypto/filters.cpp
+
+filters.obj: crypto/filters.cpp
+@AMDEP_TRUE@	source='crypto/filters.cpp' object='filters.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/filters.Po' tmpdepfile='$(DEPDIR)/filters.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o filters.obj `cygpath -w crypto/filters.cpp`
+
+haval.o: crypto/haval.cpp
+@AMDEP_TRUE@	source='crypto/haval.cpp' object='haval.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/haval.Po' tmpdepfile='$(DEPDIR)/haval.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o haval.o `test -f 'crypto/haval.cpp' || echo '$(srcdir)/'`crypto/haval.cpp
+
+haval.obj: crypto/haval.cpp
+@AMDEP_TRUE@	source='crypto/haval.cpp' object='haval.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/haval.Po' tmpdepfile='$(DEPDIR)/haval.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o haval.obj `cygpath -w crypto/haval.cpp`
+
+hex.o: crypto/hex.cpp
+@AMDEP_TRUE@	source='crypto/hex.cpp' object='hex.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/hex.Po' tmpdepfile='$(DEPDIR)/hex.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o hex.o `test -f 'crypto/hex.cpp' || echo '$(srcdir)/'`crypto/hex.cpp
+
+hex.obj: crypto/hex.cpp
+@AMDEP_TRUE@	source='crypto/hex.cpp' object='hex.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/hex.Po' tmpdepfile='$(DEPDIR)/hex.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o hex.obj `cygpath -w crypto/hex.cpp`
+
+iterhash.o: crypto/iterhash.cpp
+@AMDEP_TRUE@	source='crypto/iterhash.cpp' object='iterhash.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/iterhash.Po' tmpdepfile='$(DEPDIR)/iterhash.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o iterhash.o `test -f 'crypto/iterhash.cpp' || echo '$(srcdir)/'`crypto/iterhash.cpp
+
+iterhash.obj: crypto/iterhash.cpp
+@AMDEP_TRUE@	source='crypto/iterhash.cpp' object='iterhash.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/iterhash.Po' tmpdepfile='$(DEPDIR)/iterhash.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o iterhash.obj `cygpath -w crypto/iterhash.cpp`
+
+md2.o: crypto/md2.cpp
+@AMDEP_TRUE@	source='crypto/md2.cpp' object='md2.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/md2.Po' tmpdepfile='$(DEPDIR)/md2.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o md2.o `test -f 'crypto/md2.cpp' || echo '$(srcdir)/'`crypto/md2.cpp
+
+md2.obj: crypto/md2.cpp
+@AMDEP_TRUE@	source='crypto/md2.cpp' object='md2.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/md2.Po' tmpdepfile='$(DEPDIR)/md2.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o md2.obj `cygpath -w crypto/md2.cpp`
+
+md5.o: crypto/md5.cpp
+@AMDEP_TRUE@	source='crypto/md5.cpp' object='md5.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/md5.Po' tmpdepfile='$(DEPDIR)/md5.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o md5.o `test -f 'crypto/md5.cpp' || echo '$(srcdir)/'`crypto/md5.cpp
+
+md5.obj: crypto/md5.cpp
+@AMDEP_TRUE@	source='crypto/md5.cpp' object='md5.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/md5.Po' tmpdepfile='$(DEPDIR)/md5.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o md5.obj `cygpath -w crypto/md5.cpp`
+
+misc.o: crypto/misc.cpp
+@AMDEP_TRUE@	source='crypto/misc.cpp' object='misc.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/misc.Po' tmpdepfile='$(DEPDIR)/misc.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o misc.o `test -f 'crypto/misc.cpp' || echo '$(srcdir)/'`crypto/misc.cpp
+
+misc.obj: crypto/misc.cpp
+@AMDEP_TRUE@	source='crypto/misc.cpp' object='misc.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/misc.Po' tmpdepfile='$(DEPDIR)/misc.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o misc.obj `cygpath -w crypto/misc.cpp`
+
+mqueue.o: crypto/mqueue.cpp
+@AMDEP_TRUE@	source='crypto/mqueue.cpp' object='mqueue.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/mqueue.Po' tmpdepfile='$(DEPDIR)/mqueue.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o mqueue.o `test -f 'crypto/mqueue.cpp' || echo '$(srcdir)/'`crypto/mqueue.cpp
+
+mqueue.obj: crypto/mqueue.cpp
+@AMDEP_TRUE@	source='crypto/mqueue.cpp' object='mqueue.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/mqueue.Po' tmpdepfile='$(DEPDIR)/mqueue.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o mqueue.obj `cygpath -w crypto/mqueue.cpp`
+
+panama.o: crypto/panama.cpp
+@AMDEP_TRUE@	source='crypto/panama.cpp' object='panama.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/panama.Po' tmpdepfile='$(DEPDIR)/panama.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o panama.o `test -f 'crypto/panama.cpp' || echo '$(srcdir)/'`crypto/panama.cpp
+
+panama.obj: crypto/panama.cpp
+@AMDEP_TRUE@	source='crypto/panama.cpp' object='panama.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/panama.Po' tmpdepfile='$(DEPDIR)/panama.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o panama.obj `cygpath -w crypto/panama.cpp`
+
+pch.o: crypto/pch.cpp
+@AMDEP_TRUE@	source='crypto/pch.cpp' object='pch.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/pch.Po' tmpdepfile='$(DEPDIR)/pch.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o pch.o `test -f 'crypto/pch.cpp' || echo '$(srcdir)/'`crypto/pch.cpp
+
+pch.obj: crypto/pch.cpp
+@AMDEP_TRUE@	source='crypto/pch.cpp' object='pch.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/pch.Po' tmpdepfile='$(DEPDIR)/pch.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o pch.obj `cygpath -w crypto/pch.cpp`
+
+ripemd.o: crypto/ripemd.cpp
+@AMDEP_TRUE@	source='crypto/ripemd.cpp' object='ripemd.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/ripemd.Po' tmpdepfile='$(DEPDIR)/ripemd.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o ripemd.o `test -f 'crypto/ripemd.cpp' || echo '$(srcdir)/'`crypto/ripemd.cpp
+
+ripemd.obj: crypto/ripemd.cpp
+@AMDEP_TRUE@	source='crypto/ripemd.cpp' object='ripemd.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/ripemd.Po' tmpdepfile='$(DEPDIR)/ripemd.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o ripemd.obj `cygpath -w crypto/ripemd.cpp`
+
+sha.o: crypto/sha.cpp
+@AMDEP_TRUE@	source='crypto/sha.cpp' object='sha.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/sha.Po' tmpdepfile='$(DEPDIR)/sha.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sha.o `test -f 'crypto/sha.cpp' || echo '$(srcdir)/'`crypto/sha.cpp
+
+sha.obj: crypto/sha.cpp
+@AMDEP_TRUE@	source='crypto/sha.cpp' object='sha.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/sha.Po' tmpdepfile='$(DEPDIR)/sha.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sha.obj `cygpath -w crypto/sha.cpp`
+
+strciphr.o: crypto/strciphr.cpp
+@AMDEP_TRUE@	source='crypto/strciphr.cpp' object='strciphr.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/strciphr.Po' tmpdepfile='$(DEPDIR)/strciphr.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o strciphr.o `test -f 'crypto/strciphr.cpp' || echo '$(srcdir)/'`crypto/strciphr.cpp
+
+strciphr.obj: crypto/strciphr.cpp
+@AMDEP_TRUE@	source='crypto/strciphr.cpp' object='strciphr.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/strciphr.Po' tmpdepfile='$(DEPDIR)/strciphr.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o strciphr.obj `cygpath -w crypto/strciphr.cpp`
+
+tiger.o: crypto/tiger.cpp
+@AMDEP_TRUE@	source='crypto/tiger.cpp' object='tiger.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/tiger.Po' tmpdepfile='$(DEPDIR)/tiger.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o tiger.o `test -f 'crypto/tiger.cpp' || echo '$(srcdir)/'`crypto/tiger.cpp
+
+tiger.obj: crypto/tiger.cpp
+@AMDEP_TRUE@	source='crypto/tiger.cpp' object='tiger.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/tiger.Po' tmpdepfile='$(DEPDIR)/tiger.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o tiger.obj `cygpath -w crypto/tiger.cpp`
+
+simple.o: crypto/simple.cpp
+@AMDEP_TRUE@	source='crypto/simple.cpp' object='simple.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/simple.Po' tmpdepfile='$(DEPDIR)/simple.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o simple.o `test -f 'crypto/simple.cpp' || echo '$(srcdir)/'`crypto/simple.cpp
+
+simple.obj: crypto/simple.cpp
+@AMDEP_TRUE@	source='crypto/simple.cpp' object='simple.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/simple.Po' tmpdepfile='$(DEPDIR)/simple.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o simple.obj `cygpath -w crypto/simple.cpp`
+
+queue.o: crypto/queue.cpp
+@AMDEP_TRUE@	source='crypto/queue.cpp' object='queue.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/queue.Po' tmpdepfile='$(DEPDIR)/queue.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o queue.o `test -f 'crypto/queue.cpp' || echo '$(srcdir)/'`crypto/queue.cpp
+
+queue.obj: crypto/queue.cpp
+@AMDEP_TRUE@	source='crypto/queue.cpp' object='queue.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/queue.Po' tmpdepfile='$(DEPDIR)/queue.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o queue.obj `cygpath -w crypto/queue.cpp`
+
+fips140.o: crypto/fips140.cpp
+@AMDEP_TRUE@	source='crypto/fips140.cpp' object='fips140.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/fips140.Po' tmpdepfile='$(DEPDIR)/fips140.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o fips140.o `test -f 'crypto/fips140.cpp' || echo '$(srcdir)/'`crypto/fips140.cpp
+
+fips140.obj: crypto/fips140.cpp
+@AMDEP_TRUE@	source='crypto/fips140.cpp' object='fips140.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/fips140.Po' tmpdepfile='$(DEPDIR)/fips140.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o fips140.obj `cygpath -w crypto/fips140.cpp`
+
+trdlocal.o: crypto/trdlocal.cpp
+@AMDEP_TRUE@	source='crypto/trdlocal.cpp' object='trdlocal.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/trdlocal.Po' tmpdepfile='$(DEPDIR)/trdlocal.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o trdlocal.o `test -f 'crypto/trdlocal.cpp' || echo '$(srcdir)/'`crypto/trdlocal.cpp
+
+trdlocal.obj: crypto/trdlocal.cpp
+@AMDEP_TRUE@	source='crypto/trdlocal.cpp' object='trdlocal.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/trdlocal.Po' tmpdepfile='$(DEPDIR)/trdlocal.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o trdlocal.obj `cygpath -w crypto/trdlocal.cpp`
+
+tigertab.o: crypto/tigertab.cpp
+@AMDEP_TRUE@	source='crypto/tigertab.cpp' object='tigertab.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/tigertab.Po' tmpdepfile='$(DEPDIR)/tigertab.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o tigertab.o `test -f 'crypto/tigertab.cpp' || echo '$(srcdir)/'`crypto/tigertab.cpp
+
+tigertab.obj: crypto/tigertab.cpp
+@AMDEP_TRUE@	source='crypto/tigertab.cpp' object='tigertab.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/tigertab.Po' tmpdepfile='$(DEPDIR)/tigertab.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o tigertab.obj `cygpath -w crypto/tigertab.cpp`
+CXXDEPMODE = @CXXDEPMODE@
 uninstall-info-am:
 
 ETAGS = etags
