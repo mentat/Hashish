@@ -44,18 +44,18 @@
 #include "hashish_wdr.h"
 
 /* cryptoPP includes */
-#include "cryptopp/misc.h"
-#include "cryptopp/files.h"
-#include "cryptopp/crc.h"
-#include "cryptopp/hex.h"
-#include "cryptopp/sha.h"
-#include "cryptopp/md2.h"
-#include "cryptopp/md5.h"
-#include "cryptopp/ripemd.h"
-#include "cryptopp/tiger.h"
-#include "cryptopp/base64.h"
-#include "cryptopp/panama.h"
-#include "cryptopp/haval.h"
+#include "crypto/misc.h"
+#include "crypto/files.h"
+#include "crypto/crc.h"
+#include "crypto/hex.h"
+#include "crypto/sha.h"
+#include "crypto/md2.h"
+#include "crypto/md5.h"
+#include "crypto/ripemd.h"
+#include "crypto/tiger.h"
+#include "crypto/base64.h"
+#include "crypto/panama.h"
+#include "crypto/haval.h"
 /* end cryptopp includes */
 
 #include "gnu_small_trans.xpm"
@@ -188,8 +188,13 @@ bool MyApp::OnInit()
 	appIcon.CopyFromBitmap(wxBitmap(gnu_small_trans_xpm));
 	m_taskBarIcon.SetIcon(appIcon, wxT("Hashish"));
 	m_taskBarIcon.setFrame(m_frame);
+    m_frame->SetIcon(wxIcon("aaaa"));
+#else
+    wxIcon frameIcon;
+    frameIcon.CopyFromBitmap(wxBitmap(gnu_small_trans_xpm));
+    m_frame->SetIcon(frameIcon);
 #endif
-   
+    
 	m_frame->Show(TRUE);
 	SetTopWindow(m_frame);
 
@@ -220,10 +225,6 @@ HashFrame::HashFrame(const wxString& title, const wxPoint& pos, const wxSize& si
        : wxFrame((wxFrame *)NULL, -1, title, pos, size, wxMINIMIZE_BOX |
 		       wxSYSTEM_MENU | wxCAPTION)
 {
-    wxIcon appIcon;
-    appIcon.CopyFromBitmap(wxBitmap(gnu_small_trans_xpm));
-    SetIcon(appIcon); 
-
     m_menu = MainMenu();
     SetMenuBar(m_menu);
     CreateStatusBar();
@@ -263,7 +264,8 @@ void HashFrame::OnQuit(wxCommandEvent& event)
 
 void HashFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
 {
-    wxMessageBox(_T("Hashish 1.1\n© 2003-2004 Jesse Lovelace\n"
+    wxMessageBox(_T("Hashish 1.1b\n© 2003-2004 Jesse Lovelace\n"
+                "jllovela@ncsu.edu\n"
 			    "\nGNU General Public License\n\n"
 			    "Visit the Hashish website:\n"
 			    "http://hashish.sf.net"),
@@ -467,10 +469,10 @@ void HashTaskBar::OnRButtonUp(wxEvent&)
 {
     wxMenu      menu;
 
-    menu.Append(ID_TASKBAR_RESTORE, "&Restore Hashish");
-    menu.Append(ID_TASKBAR_LOAD, "&Load file to hash");
-    menu.Append(ID_MENU_ABOUT, "&About Hashish");
-    menu.AppendSeparator();
+   // menu.Append(ID_TASKBAR_RESTORE, "&Restore Hashish");
+   // menu.Append(ID_TASKBAR_LOAD, "&Load file to hash");
+   // menu.Append(ID_MENU_ABOUT, "&About Hashish");
+   // menu.AppendSeparator();
     menu.Append(ID_TASKBAR_EXIT,  "E&xit");
 
     PopupMenu(&menu);

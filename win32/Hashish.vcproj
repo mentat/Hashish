@@ -79,13 +79,15 @@
 			ATLMinimizesCRunTimeLibraryUsage="FALSE">
 			<Tool
 				Name="VCCLCompilerTool"
-				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="../wxWindows/include,..\wxWindows\lib\msw,.."
-				PreprocessorDefinitions="NDEBUG,WIN32,_WINDOWS,WINVER=0x400,_MT,wxUSE_GUI=1"
+				GlobalOptimizations="TRUE"
+				InlineFunctionExpansion="0"
+				OptimizeForWindowsApplication="TRUE"
+				AdditionalIncludeDirectories="$(WXWIN)\include,$(WXWIN)\lib\msw,..\src"
+				PreprocessorDefinitions="NDEBUG,WIN32,_WINDOWS,WINVER=0x400,_MT"
 				StringPooling="TRUE"
-				RuntimeLibrary="0"
-				EnableFunctionLevelLinking="TRUE"
-				UsePrecompiledHeader="2"
+				RuntimeLibrary="2"
+				EnableFunctionLevelLinking="FALSE"
+				UsePrecompiledHeader="0"
 				PrecompiledHeaderFile=".\Release/Hashish.pch"
 				AssemblerListingLocation=".\Release/"
 				ObjectFile=".\Release/"
@@ -98,12 +100,12 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib wsock32.lib zlib.lib regex.lib png.lib jpeg.lib tiff.lib wxmsw.lib cryptlib.lib"
+				AdditionalDependencies="odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib wsock32.lib zlib.lib regex.lib png.lib jpeg.lib tiff.lib wxmsw.lib"
 				OutputFile=".\Release/Hashish.exe"
-				Version="0.4"
+				Version="1.1b"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
-				AdditionalLibraryDirectories="..\wxWindows\lib,..\crypto\Release"
+				AdditionalLibraryDirectories="$(WXWIN)\lib"
 				ProgramDatabaseFile=".\Release/Hashish.pdb"
 				SubSystem="2"/>
 			<Tool
@@ -331,7 +333,7 @@
 					Name="Release|Win32">
 					<Tool
 						Name="VCResourceCompilerTool"
-						AdditionalIncludeDirectories="../wxWindows/include;$(NoInherit)"/>
+						AdditionalIncludeDirectories="$(WXWIN)\include"/>
 				</FileConfiguration>
 			</File>
 		</Filter>
