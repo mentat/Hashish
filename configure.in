@@ -1,0 +1,31 @@
+dnl Process this file with autoconf to produce a configure script.
+AC_INIT(src/main.cpp)
+AM_INIT_AUTOMAKE(Hashish, 1.0)
+dnl Checks for programs.
+AC_PROG_CXX
+AC_PROG_INSTALL
+
+
+#AM_PATH_GTK(1.2.3 , , AC_MSG_ERROR(Cannot find GTK: Is gtk-config in path?))
+dnl check for wx-config
+WX_PATH_WXCONFIG(2.3.1, WXCONFIG=1)
+if test "$WXCONFIG" != 1; then
+    AC_MSG_ERROR([
+            Please check that wx-config is in path, the directory
+            where wxWindows libraries are installed (returned by
+            'wx-config --libs' command) is in LD_LIBRARY_PATH or
+            equivalent variable and wxWindows is version 2.3.1 or above.
+    ])
+fi
+
+CXXFLAGS="${CXXFLAGS} ${WX_CFLAGS}"
+LDFLAGS="${LDFLAGS} ${WX_LIBS}"
+
+dnl Checks for libraries.
+
+dnl Checks for header files.
+AC_HEADER_STDC
+AC_CHECK_HEADERS(fcntl.h sys/time.h unistd.h)
+
+
+AC_OUTPUT( src/Makefile Makefile )

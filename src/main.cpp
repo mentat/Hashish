@@ -1,10 +1,10 @@
 /**********  Hashish - Cross platform hasing utility *************/
 // --*-c++-*--
 /*
-    $Id: main.cpp,v 1.2 2002/02/02 16:56:59 thementat Exp $
+    $Id: main.cpp,v 1.3 2002/07/06 19:55:40 thementat Exp $
  
     Hashish - Cross platform hasing utility
-    Copyright (C) 2001  Jesse Lovelace, A. S. Logic Systems Co.
+    Copyright (C) 2002  Jesse Lovelace, A. S. Logic Systems Co.
  
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -22,6 +22,9 @@
 
     -----
     $Log: main.cpp,v $
+    Revision 1.3  2002/07/06 19:55:40  thementat
+    Adding automake files and updates.
+
     Revision 1.2  2002/02/02 16:56:59  thementat
     Modified makefile and added GNU text to source.
 
@@ -45,22 +48,21 @@
 #include "wx/dnd.h"
 
 #include "hashish_wdr.h"
-#include "crypto/cryptlib.h"
-#include "crypto/files.h"
 
-#include "crypto/hex.h"
-#include "crypto/rc2.h"
-#include "crypto/rc5.h"
-#include "crypto/sha.h"
-#include "crypto/md2.h"
-#include "crypto/md5.h"
-#include "crypto/ripemd.h"
-#include "crypto/tiger.h"
-#include "crypto/base64.h"
-#include "crypto/panama.h"
-#include "crypto/haval.h"
-#include "crypto/crc.h"
-#include "crypto/sapphire.h"
+/* cryptoPP includes */
+#include "cryptopp/files.h"
+#include "cryptopp/crc.h"
+#include "cryptopp/hex.h"
+#include "cryptopp/sha.h"
+#include "cryptopp/md2.h"
+#include "cryptopp/md5.h"
+#include "cryptopp/ripemd.h"
+#include "cryptopp/tiger.h"
+#include "cryptopp/base64.h"
+#include "cryptopp/panama.h"
+#include "cryptopp/haval.h"
+#include "cryptopp/sapphire.h"
+/* end cryptopp includes */
 
 #include "gnu_small_trans.xpm"
 
