@@ -1,0 +1,20 @@
+Release 1.1b - * Bundled needed CryptoPP files with Hashish
+               * Fixed build system
+               * Updated Win32 build!
+
+Release 1.1a - * Fixed hash choice box error
+               * Fixed FreeBSD errors
+               * Misc. fixes
+
+Release 1.0 - * Added support for system tray (win32)
+	      * Configure script for unix machines.
+              * Edit functions for clipboard
+              * Better endian support
+              * More binary builds (OSX!)
+              * More keyboard shortcuts
+
+Beta 0.4 - * Added drag and drop.
+           * Released unix builds
+           * Added HAVAL 3-5, CRC32, and Sapphire Hash
+
+Beta 0.1 - * Initial Release
