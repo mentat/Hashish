@@ -17,7 +17,7 @@ CXXFLAGS_S = -I$(WXWIN)/src/png -I$(WXWIN)/src/jpeg -I$(WXWIN)/src/tiff \
 LIBS_STATIC = `wx-config --libs --static` -L../crypto -lcryptopp \
  	-L/usr/X11R6/lib -L/usr/X11R6/lib -L/usr/lib -lgtk12  \
 	-lgdk12 -L/usr/local/lib -Wl,-E -lgmodule12 -lgthread12 -lglib12 -pthread \
-	-lintl -lxpg4 -lXext -lX11 -lm -lz -lc_r -lm -lcryptopp -lstdc++
+	-lintl -lxpg4 -lXext -lX11 -lm -lz -lc_r -lm -lcryptopp -lstdc++ -static
 
 
 # add -static if you are building a static bin
