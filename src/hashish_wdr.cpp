@@ -87,10 +87,13 @@ wxSizer *MainDiag( wxWindow *parent, bool call_fit, bool set_sizer )
 #ifndef __WXMAC__
 	"Panama Hash",
 #endif	
-        "CRC-32", 
-        "Sapphire Hash"
+        "CRC-32"
     };
-    wxChoice *item11 = new wxChoice( parent, ID_LIST_HASH, wxDefaultPosition, wxSize(130,-1), 15, strs11, 0 );
+#ifndef __WXMAC__
+    wxChoice *item11 = new wxChoice( parent, ID_LIST_HASH, wxDefaultPosition, wxSize(130,-1), 14, strs11, 0 );
+#else
+    wxChoice *item11 = new wxChoice( parent, ID_LIST_HASH, wxDefaultPosition, wxSize(130, -1), 13, strs11, 0 );
+#endif
     item9->Add( item11, 0, wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 
     item0->Add( item9, 0, wxALIGN_CENTRE, 5 );

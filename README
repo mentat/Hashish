@@ -1,4 +1,4 @@
-Copyright (C) 2002 Jesse Lovelace, A. S. Logic Systems Co.
+Copyright (C) 2003 Jesse Lovelace, A. S. Logic Systems Co.
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@ File and string hashing for Windows and Unix
 UNIX:
 
 Hashish requires wxGTK 2.3.1 (http://www.wxwindows.org)
-and Crypto++ 4.2 (http://www.cryptopp.com) to be 
+and Crypto++ 5.1 (http://www.cryptopp.com) to be 
 installed/compiled in order to compile.  To run, Hashish needs
 wxWindows to be installed and the shared object to be in the path.
 

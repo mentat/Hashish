@@ -1,10 +1,10 @@
 /**********  Hashish - Cross platform hasing utility *************/
 // --*-c++-*--
 /*
-    $Id: main.cpp,v 1.6 2002/10/22 23:45:12 thementat Exp $
- 
+  
     Hashish - Cross platform hasing utility
-    Copyright (C) 2002  Jesse Lovelace, A. S. Logic Systems Co.
+    Copyright (C) 2003  Jesse Lovelace, A. S. Logic Systems Co.
+	jllovela@ncsu.edu
  
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,90 +19,7 @@
     You should have received a copy of the GNU General Public License
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-
-    -----
-    $Log: main.cpp,v $
-    Revision 1.6  2002/10/22 23:45:12  thementat
-    Updating source files.
-
-    Revision 1.5  2002/07/09 16:05:28  thementat
-    Updating to 1.0
-
-    Revision 1.4  2002/07/08 01:47:28  thementat
-    Modifications for MAC build.
-
-    Revision 1.3  2002/07/06 19:55:40  thementat
-    Adding automake files and updates.
-
-    Revision 1.2  2002/02/02 16:56:59  thementat
-    Modified makefile and added GNU text to source.
-
 */
-
-/* Hashes */
-enum { _SHA = 0, 
-    SHA_256, 
-    SHA_384, 
-    SHA_512, 
-    MD_2, 
-    MD_5, 
-    _HAVAL, 
-    HAVAL_3, 
-    HAVAL_4, 
-    HAVAL_5,
-    RIPEMD_160, 
-    _TIGER, 
-#ifndef __WXMAC__    
-    PANAMA_HASH,
-#endif   
-    _CRC32, 
-    SAPPHIRE_HASH };
-/* Ciphers */
-enum { _AES = 0,
-       _MARS,
-       _TWOFISH,
-       _RC6,
-       _SERPENT,
-       _CAST256,
-       _BLOWFISH,
-       _IDEA,
-       _3DES_EDE2,
-       _3DES_EDE3,
-       _DESX,
-       _RC2,
-       _RC5,
-       _DIAMOND,
-       _TEA,
-       _SAFER,
-       _3WAY,
-       _GOST,
-       _SHARK,
-       _CAST128,
-       _SQUARE,
-       _SKIPJACK,
-       _PANAMA,
-       _ARC4,
-       _SEAL,
-       _WAKE,
-       _WAKE_OFB,
-       _BLUM_BLUM_SHUB };
-
-/* Modes */
-enum {
-    _CBC_CTS = 0,
-    _CBC,
-    _CFB,
-    _OFB,
-    _CTR,
-    _ECB
-};
-
-// cvs values
-#define HASHISH_VER "$Revision: 1.6 $ $Date: 2002/10/22 23:45:12 $"
-
-#ifdef __BORLANDC__
-    #pragma hdrstop
-#endif
 
 #include "wx/wx.h"
 #include "wx/app.h"
@@ -115,9 +32,6 @@ enum {
 #include "wx/filedlg.h"
 #include "wx/choicdlg.h"
 #include "wx/file.h"
-#include "wx/cmdline.h"
-#include "wx/datetime.h"
-#include "wx/log.h"
 
 #if (!defined (__WXMAC__)) && (!defined (__WXX11__))
 #include "wx/dnd.h"
@@ -130,25 +44,24 @@ enum {
 #include "hashish_wdr.h"
 
 /* cryptoPP includes */
-#include "crypto50/misc.h"
-#include "crypto50/files.h"
-#include "crypto50/crc.h"
-#include "crypto50/hex.h"
-#include "crypto50/sha.h"
-#include "crypto50/md2.h"
-#include "crypto50/md5.h"
-#include "crypto50/ripemd.h"
-#include "crypto50/tiger.h"
-#include "crypto50/base64.h"
-#include "crypto50/panama.h"
-#include "crypto50/haval.h"
-#include "crypto50/sapphire.h"
+#include "cryptopp/misc.h"
+#include "cryptopp/files.h"
+#include "cryptopp/crc.h"
+#include "cryptopp/hex.h"
+#include "cryptopp/sha.h"
+#include "cryptopp/md2.h"
+#include "cryptopp/md5.h"
+#include "cryptopp/ripemd.h"
+#include "cryptopp/tiger.h"
+#include "cryptopp/base64.h"
+#include "cryptopp/panama.h"
+#include "cryptopp/haval.h"
 /* end cryptopp includes */
 
 #include "gnu_small_trans.xpm"
 
 #include <string>
-#include <iostream>
+#include <stdexcept>
 
 using namespace std;
 using namespace CryptoPP;
@@ -159,104 +72,108 @@ enum
     ID_TASKBAR_RESTORE,
     ID_TASKBAR_LOAD
 };
-class MyFrame;
+class HashFrame;
 #ifdef WIN32
-class MyTaskBarIcon: public wxTaskBarIcon
+class HashTaskBar: public wxTaskBarIcon
 {
 public:
-    MyTaskBarIcon() {};
-    virtual void OnLButtonUp(wxEvent&);
-    virtual void OnRButtonUp(wxEvent&);
-    void OnLButtonDClick(wxEvent&);
-    void OnMenuRestore(wxCommandEvent&);
-    void OnMenuExit(wxCommandEvent&);
+	HashTaskBar() {}
+	virtual void OnLButtonUp(wxEvent&);
+	virtual void OnRButtonUp(wxEvent&);
+	void OnLButtonDClick(wxEvent&);
+	void OnMenuRestore(wxCommandEvent&);
+	void OnMenuExit(wxCommandEvent&);
+
+	void setFrame(HashFrame * frame) { m_frame = frame; }
 
 private:
-    MyFrame * m_frame;
+	HashFrame * m_frame;
 
-DECLARE_EVENT_TABLE()
+	DECLARE_EVENT_TABLE()
 };
 #endif
 
 class MyApp : public wxApp
 {
 public:
-    MyFrame * m_frame;
+    HashFrame * m_frame;
 
     virtual bool OnInit();
-    ~MyApp();
 
 #ifdef WIN32
 protected:
-    MyTaskBarIcon m_taskBarIcon;
+    HashTaskBar m_taskBarIcon;
 #endif
 };
 
-class MyFrame : public wxFrame
+class HashFrame : public wxFrame
 {
 public:
 #if (!defined (__WXMAC__)) && (!defined (__WXX11__))
-    friend class DnDFile;
+	friend class DnDFile;
 #endif
-    MyFrame(const wxString& title, const wxPoint& pos, const wxSize& size);
+	HashFrame(const wxString& title, const wxPoint& pos, const wxSize& size);
 
-    void OnQuit(wxCommandEvent& event);
-    void OnAbout(wxCommandEvent& event);
-    void OnBrowseFiles(wxCommandEvent& event);
-    void OnChangeSource(wxCommandEvent& event);
-    void OnHash(wxCommandEvent& event);
-    void OnHex(wxCommandEvent& event);
-    void On64(wxCommandEvent& event);
-    void OnCopy(wxCommandEvent& event);
-    void OnPaste(wxCommandEvent& event);
-    void OnCut(wxCommandEvent& event);
-    void OnClear(wxCommandEvent& event);
+	void OnQuit(wxCommandEvent& event);
+	void OnAbout(wxCommandEvent& event);
+	void OnBrowseFiles(wxCommandEvent& event);
+	void OnChangeSource(wxCommandEvent& event);
+	void OnHash(wxCommandEvent& event);
+	void OnHex(wxCommandEvent& event);
+	void On64(wxCommandEvent& event);
+	void OnCopy(wxCommandEvent& event);
+	void OnPaste(wxCommandEvent& event);
+	void OnCut(wxCommandEvent& event);
+	void OnClear(wxCommandEvent& event);
 
 private:
 
-    bool m_hex;
-    wxTextCtrl * m_filename;
-    wxTextCtrl * m_string;
-    wxTextCtrl * m_hashout;
+	bool m_hex;
+	wxTextCtrl * m_filename;
+	wxTextCtrl * m_string;
+	wxTextCtrl * m_hashout;
 
-    wxChoice * m_listhash;
-    wxButton * m_browse;
+	wxChoice * m_listhash;
+	wxButton * m_browse;
 
-    wxRadioBox * m_rbox;
-    wxMenuBar * m_menu;
-    
-    DECLARE_EVENT_TABLE()
+	wxRadioBox * m_rbox;
+	wxMenuBar * m_menu;
+		
+	DECLARE_EVENT_TABLE()
 };
+
 #if (!defined (__WXMAC__)) && (!defined (__WXX11__))
 class DnDFile : public wxFileDropTarget
 {
 
 public:
-    DnDFile(MyFrame *pOwner) { m_pOwner = pOwner; }
+    DnDFile(HashFrame *pOwner) { m_pOwner = pOwner; }
 
     virtual bool OnDropFiles(wxCoord x, wxCoord y,
                              const wxArrayString& filenames);
 
 private:
 
-    MyFrame *m_pOwner;
+    HashFrame *m_pOwner;
 };
 
 bool DnDFile::OnDropFiles(wxCoord, wxCoord, const wxArrayString& filenames)
 {
-   // size_t nFiles = filenames.GetCount();
-  m_pOwner->m_filename->SetValue(filenames[0]);
+    // size_t nFiles = filenames.GetCount();
+    m_pOwner->m_filename->SetValue(filenames[0]);
 
-  if ((m_pOwner->m_rbox->GetSelection() != 0))
+    if ((m_pOwner->m_rbox->GetSelection() != 0))
+        return TRUE;
+
+    wxCommandEvent myevent(wxEVT_COMMAND_BUTTON_CLICKED,ID_HASH);
+
+    m_pOwner->ProcessEvent(myevent);
+
     return TRUE;
-
-  wxCommandEvent myevent(wxEVT_COMMAND_BUTTON_CLICKED,ID_HASH);
-
-  m_pOwner->ProcessEvent(myevent);
-
-  return TRUE;
 }
-#endif
+
+#endif //!WXMAC && !WXX11
+
 using namespace std;
 using namespace CryptoPP;
 
@@ -264,133 +181,96 @@ IMPLEMENT_APP(MyApp)
 
 bool MyApp::OnInit()
 {
-
-    if (wxApp::argc != 1) // if command line envoked
-    {
-        static const wxCmdLineEntryDesc cmdLineDesc[] =
-        {
-            { wxCMD_LINE_SWITCH, _T("h"), _T("help"), _T("Show this help message"),
-                wxCMD_LINE_VAL_NONE, wxCMD_LINE_OPTION_HELP },
-            { wxCMD_LINE_SWITCH, _T("c"), _T("compress"), _T("Compress a file (default GZip)") },
-            { wxCMD_LINE_SWITCH, _T("d"), _T("decompress"),   _T("Compress a file (default GZip)") },
-            { wxCMD_LINE_SWITCH, _T("hash"), _T("hash"), _T("Hash a file (default MD5)") },
-            { wxCMD_LINE_SWITCH, _T("s"), _T("sign"), _T("Sign a file (default SHA-1)") },
-            { wxCMD_LINE_SWITCH, _T("v"), _T("verify"), _T("Verify a file (default SHA-1") },
-            { wxCMD_LINE_SWITCH, _T("g"), _T("nogui"), _T("Don't show the GUI") },
-
-            //{ wxCMD_LINE_OPTION, _T("out"), _T("output"),  _T("output file") },
-            //{ wxCMD_LINE_OPTION, _T("in"), _T("input"),   _T("input file") },
-
-            { wxCMD_LINE_PARAM,  NULL, NULL, _T("input file"),
-                wxCMD_LINE_VAL_STRING},
-            { wxCMD_LINE_PARAM,  NULL, NULL, _T("output file"),
-                wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
-
-            { wxCMD_LINE_NONE }
-        };
-
-        wxCmdLineParser parser(cmdLineDesc, wxApp::argc, wxApp::argv);
-
-        parser.SetLogo(_T("Hashish Beta 2 - Copyright 2002 Jesse Lovelace"));
-
-        if (parser.Parse(true) > 0)
-            return false;
-    }
-        
-
+	m_frame = new HashFrame(_T("Hashish"), wxDefaultPosition, wxSize(500, 140));
 
 #ifdef WIN32
-    wxIcon appIcon;
-    appIcon.CopyFromBitmap(wxBitmap(gnu_small_trans_xpm));
-    m_taskBarIcon.SetIcon(appIcon, wxT("Hashish"));
+	wxIcon appIcon;
+	appIcon.CopyFromBitmap(wxBitmap(gnu_small_trans_xpm));
+	m_taskBarIcon.SetIcon(appIcon, wxT("Hashish"));
+	m_taskBarIcon.setFrame(m_frame);
 #endif
-    m_frame = new MyFrame(_T("Hashish"), wxDefaultPosition, wxSize(500, 140));
+   
+	m_frame->Show(TRUE);
+	SetTopWindow(m_frame);
 
-    m_frame->Show(TRUE);
-    SetTopWindow(m_frame);
-
-    return TRUE;
+	return TRUE;
 }
 
-MyApp::~MyApp()
-{
-}
+BEGIN_EVENT_TABLE(HashFrame, wxFrame)
+    EVT_MENU(ID_MENU_QUIT,  HashFrame::OnQuit)
+    EVT_MENU(ID_MENU_OPEN, HashFrame::OnBrowseFiles)
 
-BEGIN_EVENT_TABLE(MyFrame, wxFrame)
-    EVT_MENU(ID_MENU_QUIT,  MyFrame::OnQuit)
-    EVT_MENU(ID_MENU_OPEN, MyFrame::OnBrowseFiles)
+    EVT_MENU(ID_MENU_HEX, HashFrame::OnHex)
+    EVT_MENU(ID_MENU_64, HashFrame::On64)
+    EVT_RADIOBOX(ID_HASH_SOURCE, HashFrame::OnChangeSource)
+    EVT_BUTTON(ID_BUTTON_BROWSE, HashFrame::OnBrowseFiles)
 
-    EVT_MENU(ID_MENU_HEX, MyFrame::OnHex)
-    EVT_MENU(ID_MENU_64, MyFrame::On64)
-    EVT_RADIOBOX(ID_HASH_SOURCE, MyFrame::OnChangeSource)
-    EVT_BUTTON(ID_BUTTON_BROWSE, MyFrame::OnBrowseFiles)
-
-    EVT_BUTTON(ID_HASH, MyFrame::OnHash)
+    EVT_BUTTON(ID_HASH, HashFrame::OnHash)
     
-    EVT_MENU(ID_TASKBAR_LOAD, MyFrame::OnBrowseFiles)
-    EVT_MENU(ID_MENU_ABOUT, MyFrame::OnAbout)
-    EVT_MENU(ID_MENU_EDIT_CUT, MyFrame::OnCut)
-    EVT_MENU(ID_MENU_EDIT_PASTE, MyFrame::OnPaste)
-    EVT_MENU(ID_MENU_EDIT_COPY, MyFrame::OnCopy)
-    EVT_MENU(ID_MENU_EDIT_CLEAR, MyFrame::OnClear)
+    EVT_MENU(ID_TASKBAR_LOAD, HashFrame::OnBrowseFiles)
+    EVT_MENU(ID_MENU_ABOUT, HashFrame::OnAbout)
+    EVT_MENU(ID_MENU_EDIT_CUT, HashFrame::OnCut)
+    EVT_MENU(ID_MENU_EDIT_PASTE, HashFrame::OnPaste)
+    EVT_MENU(ID_MENU_EDIT_COPY, HashFrame::OnCopy)
+    EVT_MENU(ID_MENU_EDIT_CLEAR, HashFrame::OnClear)
 END_EVENT_TABLE()
 
 
-MyFrame::MyFrame(const wxString& title, const wxPoint& pos, const wxSize& size)
+HashFrame::HashFrame(const wxString& title, const wxPoint& pos, const wxSize& size)
        : wxFrame((wxFrame *)NULL, -1, title, pos, size, wxMINIMIZE_BOX |
 		       wxSYSTEM_MENU | wxCAPTION)
 {
-  wxIcon appIcon;
-  appIcon.CopyFromBitmap(wxBitmap(gnu_small_trans_xpm));
-  SetIcon(appIcon); 
+    wxIcon appIcon;
+    appIcon.CopyFromBitmap(wxBitmap(gnu_small_trans_xpm));
+    SetIcon(appIcon); 
 
-  m_menu = MainMenu();
-  SetMenuBar(m_menu);
-  CreateStatusBar();
- 
-  wxPanel * pTopPanel = new wxPanel(this);
-#if (!defined __WXMAC__) && (!defined (__WXX11))
-  pTopPanel->SetDropTarget(new DnDFile(this));
+    m_menu = MainMenu();
+    SetMenuBar(m_menu);
+    CreateStatusBar();
+     
+    wxPanel * pTopPanel = new wxPanel(this);
+#if (!defined __WXMAC__) && (!defined (__WXX11__))
+    pTopPanel->SetDropTarget(new DnDFile(this));
 #endif
-  wxSizer * pPanelSizer = MainDiag(pTopPanel, true,  true);  
-  pPanelSizer->SetSizeHints(this);
-  SetSize(pPanelSizer->GetMinSize());
 
-  m_browse = (wxButton *)FindWindow(ID_BUTTON_BROWSE);
-  m_filename = (wxTextCtrl *)FindWindow(ID_FILE_NAME);
-  m_string = (wxTextCtrl *)FindWindow(ID_STRING);
-  m_hashout = (wxTextCtrl *)FindWindow(ID_HASHOUT);
-  m_listhash = (wxChoice *)FindWindow(ID_LIST_HASH);
+    wxSizer * pPanelSizer = MainDiag(pTopPanel, true,  true);  
+    pPanelSizer->SetSizeHints(this);
+    SetSize(pPanelSizer->GetMinSize());
 
-  m_rbox = (wxRadioBox *)FindWindow(ID_HASH_SOURCE);
+    m_browse = (wxButton *)FindWindow(ID_BUTTON_BROWSE);
+    m_filename = (wxTextCtrl *)FindWindow(ID_FILE_NAME);
+    m_string = (wxTextCtrl *)FindWindow(ID_STRING);
+    m_hashout = (wxTextCtrl *)FindWindow(ID_HASHOUT);
+    m_listhash = (wxChoice *)FindWindow(ID_LIST_HASH);
 
-   m_hex = true;
-  (m_menu->FindItem(ID_MENU_64))->Check(FALSE);
-  (m_menu->FindItem(ID_MENU_HEX))->Check(TRUE);
+    m_rbox = (wxRadioBox *)FindWindow(ID_HASH_SOURCE);
 
-  m_listhash->SetStringSelection("SHA-1");
+    m_hex = true;
+    (m_menu->FindItem(ID_MENU_64))->Check(FALSE);
+    (m_menu->FindItem(ID_MENU_HEX))->Check(TRUE);
 
-  SetStatusText("Welcome to Hashish.");
+    m_listhash->SetSelection(0);
+
+    SetStatusText("Welcome to Hashish.");
 
 }
 
-void MyFrame::OnQuit(wxCommandEvent& event)
+void HashFrame::OnQuit(wxCommandEvent& event)
 {
-
     Close(TRUE);
 }
 
 
-void MyFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
+void HashFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
 {
-    wxMessageBox(_T("Hashish 1.0\n© 2002 Jesse Lovelace\n"
+    wxMessageBox(_T("Hashish 1.1\n© 2003 Jesse Lovelace\n"
 			    "\nGNU General Public License\n\n"
 			    "Visit the Hashish website:\n"
 			    "http://hashish.sf.net"),
                  _T("About Hashish"), wxOK | wxICON_INFORMATION, this);
 }
 
-void MyFrame::OnCopy(wxCommandEvent& event)
+void HashFrame::OnCopy(wxCommandEvent& event)
 {
     if (wxTheClipboard->Open())
     {
@@ -398,7 +278,7 @@ void MyFrame::OnCopy(wxCommandEvent& event)
         wxTheClipboard->Close();
     }
 }
-void MyFrame::OnPaste(wxCommandEvent& event)
+void HashFrame::OnPaste(wxCommandEvent& event)
 {
     if (wxTheClipboard->Open())
     {
@@ -412,7 +292,7 @@ void MyFrame::OnPaste(wxCommandEvent& event)
     }
 
 }
-void MyFrame::OnCut(wxCommandEvent& event)
+void HashFrame::OnCut(wxCommandEvent& event)
 {
   if (wxTheClipboard->Open())
     {
@@ -422,12 +302,12 @@ void MyFrame::OnCut(wxCommandEvent& event)
     m_hashout->Clear();
 }
 
-void MyFrame::OnClear(wxCommandEvent& event)
+void HashFrame::OnClear(wxCommandEvent& event)
 {
    m_hashout->Clear();
 }
 
-void MyFrame::OnBrowseFiles(wxCommandEvent& event)
+void HashFrame::OnBrowseFiles(wxCommandEvent& event)
 {
 
   if(m_rbox->GetSelection() != 0)
@@ -442,28 +322,28 @@ void MyFrame::OnBrowseFiles(wxCommandEvent& event)
 
 }
 
-void MyFrame::OnChangeSource(wxCommandEvent& event)
+void HashFrame::OnChangeSource(wxCommandEvent& event)
 {
-  if(m_rbox->GetSelection() == 0)
-  {
-    m_string->Enable(FALSE);
-    m_browse->Enable(TRUE);
-    m_filename->Enable(TRUE);
-    (m_menu->FindItem(ID_MENU_OPEN))->Enable(TRUE);
-  }
-  else
-  {
-    m_browse->Enable(FALSE);
-    m_filename->Enable(FALSE);
-    m_string->Enable(TRUE);
-    (m_menu->FindItem(ID_MENU_OPEN))->Enable(FALSE);
-  }
+    if(m_rbox->GetSelection() == 0)
+    {
+        m_string->Enable(FALSE);
+        m_browse->Enable(TRUE);
+        m_filename->Enable(TRUE);
+        (m_menu->FindItem(ID_MENU_OPEN))->Enable(TRUE);
+    }
+    else
+    {
+        m_browse->Enable(FALSE);
+        m_filename->Enable(FALSE);
+        m_string->Enable(TRUE);
+        (m_menu->FindItem(ID_MENU_OPEN))->Enable(FALSE);
+    }
 
 }
 
-void MyFrame::OnHash(wxCommandEvent& event)
+void HashFrame::OnHash(wxCommandEvent& event)
 {
-    /*
+
     if ((m_rbox->GetSelection() == 0))
     {
         if (!wxFile::Exists(m_filename->GetValue()))
@@ -474,38 +354,41 @@ void MyFrame::OnHash(wxCommandEvent& event)
     }
 
     SetStatusText("Hashing...");
-
-
-
+    enum { _SHA = 0, SHA_256, SHA_384, SHA_512, MD_2, MD_5, _HAVAL, HAVAL_3, HAVAL_4, HAVAL_5,
+        RIPEMD_160, _TIGER, 
+#ifndef __WXMAC__ 
+		PANAMA_HASH,
+#endif 
+		_CRC32 };
     
-  
-	SecByteBlock hash;
+    HashTransformation * hash;
 
-	switch (m_listhash->GetSelection())
-	{
-	case(_SHA): hash = new SHA; break;
-	case(SHA_256): hash = new SHA256; break;
-	case(SHA_384): hash = new SHA384; break;
-	case(SHA_512): hash = new SHA512; break;
-	case(MD_2): hash = new MD2; break;
-	case(MD_5): hash = new MD5; break;
-	case(_HAVAL): hash = new HAVAL; break;
-	case(HAVAL_3): hash = new HAVAL3; break;
-	case(HAVAL_4): hash = new HAVAL4; break;
-	case(HAVAL_5): hash = new HAVAL5; break;
+    switch (m_listhash->GetSelection())
+    {
+    case(_SHA): hash = new SHA; break;
+    case(SHA_256): hash = new SHA256; break;
+    case(SHA_384): hash = new SHA384; break;
+    case(SHA_512): hash = new SHA512; break;
+    case(MD_2): hash = new MD2; break;
+    case(MD_5): hash = new MD5; break;
+    case(_HAVAL): hash = new HAVAL; break;
+    case(HAVAL_3): hash = new HAVAL3; break;
+    case(HAVAL_4): hash = new HAVAL4; break;
+    case(HAVAL_5): hash = new HAVAL5; break;
     case(_CRC32): hash = new CRC32; break;
-    case(SAPPHIRE_HASH): hash = new SapphireHash; break;
     case(RIPEMD_160): hash = new RIPEMD160; break;
-	case(_TIGER): hash = new Tiger; break;
+    case(_TIGER): hash = new Tiger; break;
 #ifndef __WXMAC__
-	case(PANAMA_HASH): hash = new PanamaHash; break;
-#endif		     
-	default: hash = new SHA256;
-	}
+#ifdef IS_LITTLE_ENDIAN
+    case(PANAMA_HASH): hash = new PanamaHash<LittleEndian>; break; // true for big endian
+#else
+    case(PANAMA_HASH): hash = new PanamaHash<BigEndian>; break;
+#endif
+#endif
+    default: throw runtime_error("Invalid Selection");
+    }
 
- 	string outstring;
-
-
+    string outstring;
 
     HashFilter * hashFilter;
 
@@ -513,48 +396,48 @@ void MyFrame::OnHash(wxCommandEvent& event)
         hashFilter = new HashFilter(*hash, new HexEncoder(new StringSink(outstring)));
     else
         hashFilter = new HashFilter(*hash, new Base64Encoder(new StringSink(outstring), false));
-
+    
     if ((m_rbox->GetSelection() == 0))
         FileSource file1(m_filename->GetValue().c_str(), true, new Redirector(*hashFilter, false));
     else
         StringSource string1(m_string->GetValue().c_str(), true, new Redirector(*hashFilter, false));
+    
     hashFilter->MessageEnd();
 
     delete hashFilter;
- 	delete hash;
+    delete hash;
 
-	m_hashout->SetValue(outstring.c_str());
+    m_hashout->SetValue(outstring.c_str());
     SetStatusText("Hashing...Done!");
-  */
 }
 
-void MyFrame::On64(wxCommandEvent& event)
+void HashFrame::On64(wxCommandEvent& event)
 {
-  (m_menu->FindItem(ID_MENU_64))->Check(TRUE);
-  (m_menu->FindItem(ID_MENU_HEX))->Check(FALSE);
-  m_hex = false;
+    (m_menu->FindItem(ID_MENU_64))->Check(TRUE);
+    (m_menu->FindItem(ID_MENU_HEX))->Check(FALSE);
+    m_hex = false;
 }
 
-void MyFrame::OnHex(wxCommandEvent& event)
+void HashFrame::OnHex(wxCommandEvent& event)
 {
-  m_hex = true;
-  (m_menu->FindItem(ID_MENU_64))->Check(FALSE);
-  (m_menu->FindItem(ID_MENU_HEX))->Check(TRUE);
+    m_hex = true;
+    (m_menu->FindItem(ID_MENU_64))->Check(FALSE);
+    (m_menu->FindItem(ID_MENU_HEX))->Check(TRUE);
 
 }
 
 #ifdef WIN32
-BEGIN_EVENT_TABLE(MyTaskBarIcon, wxTaskBarIcon)
-    EVT_MENU(ID_TASKBAR_RESTORE, MyTaskBarIcon::OnMenuRestore)
-    EVT_MENU(ID_TASKBAR_EXIT,    MyTaskBarIcon::OnMenuExit)
+BEGIN_EVENT_TABLE(HashTaskBar, wxTaskBarIcon)
+    EVT_MENU(ID_TASKBAR_RESTORE, HashTaskBar::OnMenuRestore)
+    EVT_MENU(ID_TASKBAR_EXIT,    HashTaskBar::OnMenuExit)
 END_EVENT_TABLE()
 
-void MyTaskBarIcon::OnMenuRestore(wxCommandEvent& )
+void HashTaskBar::OnMenuRestore(wxCommandEvent& )
 {
     m_frame->Show(TRUE);
 }
 
-void MyTaskBarIcon::OnMenuExit(wxCommandEvent& )
+void HashTaskBar::OnMenuExit(wxCommandEvent& )
 {
     m_frame->Close(TRUE);
 
@@ -565,7 +448,7 @@ void MyTaskBarIcon::OnMenuExit(wxCommandEvent& )
 }
 
 
-void MyTaskBarIcon::OnLButtonUp(wxEvent&)
+void HashTaskBar::OnLButtonUp(wxEvent&)
 {
 #if 0
     wxMenu      menu;
@@ -580,7 +463,7 @@ void MyTaskBarIcon::OnLButtonUp(wxEvent&)
 #endif
 }
 
-void MyTaskBarIcon::OnRButtonUp(wxEvent&)
+void HashTaskBar::OnRButtonUp(wxEvent&)
 {
     wxMenu      menu;
 
@@ -593,7 +476,7 @@ void MyTaskBarIcon::OnRButtonUp(wxEvent&)
     PopupMenu(&menu);
 }
 
-void MyTaskBarIcon::OnLButtonDClick(wxEvent&)
+void HashTaskBar::OnLButtonDClick(wxEvent&)
 {
     if (m_frame->IsShown())
         m_frame->Show(FALSE);
@@ -601,3 +484,4 @@ void MyTaskBarIcon::OnLButtonDClick(wxEvent&)
         m_frame->Show(TRUE);
 }
 #endif
+

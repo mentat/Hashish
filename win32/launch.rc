@@ -1,2 +1,2 @@
-//aaaa     ICON "hash.ico"
+aaaa     ICON "../src/hash.ico"
 #include "wx/msw/wx.rc"
