@@ -3,8 +3,8 @@
 /*
   
     Hashish - Cross platform hasing utility
-    Copyright (C) 2003  Jesse Lovelace, A. S. Logic Systems Co.
-	jllovela@ncsu.edu
+    Copyright (C) 2003-2004 Jesse Lovelace, A. S. Logic Systems Co.
+	 jllovela@ncsu.edu
  
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
