@@ -1,7 +1,7 @@
 /**********  Hashish - Cross platform hasing utility *************/
 // --*-c++-*--
 /*
-    $Id: main.cpp,v 1.5 2002/07/09 16:05:28 thementat Exp $
+    $Id: main.cpp,v 1.6 2002/10/22 23:45:12 thementat Exp $
  
     Hashish - Cross platform hasing utility
     Copyright (C) 2002  Jesse Lovelace, A. S. Logic Systems Co.
@@ -22,6 +22,9 @@
 
     -----
     $Log: main.cpp,v $
+    Revision 1.6  2002/10/22 23:45:12  thementat
+    Updating source files.
+
     Revision 1.5  2002/07/09 16:05:28  thementat
     Updating to 1.0
 
@@ -35,6 +38,67 @@
     Modified makefile and added GNU text to source.
 
 */
+
+/* Hashes */
+enum { _SHA = 0, 
+    SHA_256, 
+    SHA_384, 
+    SHA_512, 
+    MD_2, 
+    MD_5, 
+    _HAVAL, 
+    HAVAL_3, 
+    HAVAL_4, 
+    HAVAL_5,
+    RIPEMD_160, 
+    _TIGER, 
+#ifndef __WXMAC__    
+    PANAMA_HASH,
+#endif   
+    _CRC32, 
+    SAPPHIRE_HASH };
+/* Ciphers */
+enum { _AES = 0,
+       _MARS,
+       _TWOFISH,
+       _RC6,
+       _SERPENT,
+       _CAST256,
+       _BLOWFISH,
+       _IDEA,
+       _3DES_EDE2,
+       _3DES_EDE3,
+       _DESX,
+       _RC2,
+       _RC5,
+       _DIAMOND,
+       _TEA,
+       _SAFER,
+       _3WAY,
+       _GOST,
+       _SHARK,
+       _CAST128,
+       _SQUARE,
+       _SKIPJACK,
+       _PANAMA,
+       _ARC4,
+       _SEAL,
+       _WAKE,
+       _WAKE_OFB,
+       _BLUM_BLUM_SHUB };
+
+/* Modes */
+enum {
+    _CBC_CTS = 0,
+    _CBC,
+    _CFB,
+    _OFB,
+    _CTR,
+    _ECB
+};
+
+// cvs values
+#define HASHISH_VER "$Revision: 1.6 $ $Date: 2002/10/22 23:45:12 $"
 
 #ifdef __BORLANDC__
     #pragma hdrstop
@@ -51,6 +115,9 @@
 #include "wx/filedlg.h"
 #include "wx/choicdlg.h"
 #include "wx/file.h"
+#include "wx/cmdline.h"
+#include "wx/datetime.h"
+#include "wx/log.h"
 
 #if (!defined (__WXMAC__)) && (!defined (__WXX11__))
 #include "wx/dnd.h"
@@ -63,24 +130,25 @@
 #include "hashish_wdr.h"
 
 /* cryptoPP includes */
-#include "cryptopp/misc.h"
-#include "cryptopp/files.h"
-#include "cryptopp/crc.h"
-#include "cryptopp/hex.h"
-#include "cryptopp/sha.h"
-#include "cryptopp/md2.h"
-#include "cryptopp/md5.h"
-#include "cryptopp/ripemd.h"
-#include "cryptopp/tiger.h"
-#include "cryptopp/base64.h"
-#include "cryptopp/panama.h"
-#include "cryptopp/haval.h"
-#include "cryptopp/sapphire.h"
+#include "crypto50/misc.h"
+#include "crypto50/files.h"
+#include "crypto50/crc.h"
+#include "crypto50/hex.h"
+#include "crypto50/sha.h"
+#include "crypto50/md2.h"
+#include "crypto50/md5.h"
+#include "crypto50/ripemd.h"
+#include "crypto50/tiger.h"
+#include "crypto50/base64.h"
+#include "crypto50/panama.h"
+#include "crypto50/haval.h"
+#include "crypto50/sapphire.h"
 /* end cryptopp includes */
 
 #include "gnu_small_trans.xpm"
 
 #include <string>
+#include <iostream>
 
 using namespace std;
 using namespace CryptoPP;
@@ -91,6 +159,7 @@ enum
     ID_TASKBAR_RESTORE,
     ID_TASKBAR_LOAD
 };
+class MyFrame;
 #ifdef WIN32
 class MyTaskBarIcon: public wxTaskBarIcon
 {
@@ -102,20 +171,24 @@ public:
     void OnMenuRestore(wxCommandEvent&);
     void OnMenuExit(wxCommandEvent&);
 
+private:
+    MyFrame * m_frame;
+
 DECLARE_EVENT_TABLE()
 };
 #endif
-class MyFrame;
+
 class MyApp : public wxApp
 {
 public:
     MyFrame * m_frame;
 
     virtual bool OnInit();
+    ~MyApp();
 
 #ifdef WIN32
 protected:
-    MyTaskBarIcon m_TaskBarIcon;
+    MyTaskBarIcon m_taskBarIcon;
 #endif
 };
 
@@ -191,6 +264,41 @@ IMPLEMENT_APP(MyApp)
 
 bool MyApp::OnInit()
 {
+
+    if (wxApp::argc != 1) // if command line envoked
+    {
+        static const wxCmdLineEntryDesc cmdLineDesc[] =
+        {
+            { wxCMD_LINE_SWITCH, _T("h"), _T("help"), _T("Show this help message"),
+                wxCMD_LINE_VAL_NONE, wxCMD_LINE_OPTION_HELP },
+            { wxCMD_LINE_SWITCH, _T("c"), _T("compress"), _T("Compress a file (default GZip)") },
+            { wxCMD_LINE_SWITCH, _T("d"), _T("decompress"),   _T("Compress a file (default GZip)") },
+            { wxCMD_LINE_SWITCH, _T("hash"), _T("hash"), _T("Hash a file (default MD5)") },
+            { wxCMD_LINE_SWITCH, _T("s"), _T("sign"), _T("Sign a file (default SHA-1)") },
+            { wxCMD_LINE_SWITCH, _T("v"), _T("verify"), _T("Verify a file (default SHA-1") },
+            { wxCMD_LINE_SWITCH, _T("g"), _T("nogui"), _T("Don't show the GUI") },
+
+            //{ wxCMD_LINE_OPTION, _T("out"), _T("output"),  _T("output file") },
+            //{ wxCMD_LINE_OPTION, _T("in"), _T("input"),   _T("input file") },
+
+            { wxCMD_LINE_PARAM,  NULL, NULL, _T("input file"),
+                wxCMD_LINE_VAL_STRING},
+            { wxCMD_LINE_PARAM,  NULL, NULL, _T("output file"),
+                wxCMD_LINE_VAL_STRING, wxCMD_LINE_PARAM_OPTIONAL },
+
+            { wxCMD_LINE_NONE }
+        };
+
+        wxCmdLineParser parser(cmdLineDesc, wxApp::argc, wxApp::argv);
+
+        parser.SetLogo(_T("Hashish Beta 2 - Copyright 2002 Jesse Lovelace"));
+
+        if (parser.Parse(true) > 0)
+            return false;
+    }
+        
+
+
 #ifdef WIN32
     wxIcon appIcon;
     appIcon.CopyFromBitmap(wxBitmap(gnu_small_trans_xpm));
@@ -202,6 +310,10 @@ bool MyApp::OnInit()
     SetTopWindow(m_frame);
 
     return TRUE;
+}
+
+MyApp::~MyApp()
+{
 }
 
 BEGIN_EVENT_TABLE(MyFrame, wxFrame)
@@ -351,7 +463,7 @@ void MyFrame::OnChangeSource(wxCommandEvent& event)
 
 void MyFrame::OnHash(wxCommandEvent& event)
 {
-
+    /*
     if ((m_rbox->GetSelection() == 0))
     {
         if (!wxFile::Exists(m_filename->GetValue()))
@@ -362,25 +474,12 @@ void MyFrame::OnHash(wxCommandEvent& event)
     }
 
     SetStatusText("Hashing...");
-    enum { _SHA = 0, 
-	    SHA_256, 
-	    SHA_384, 
-	    SHA_512, 
-	    MD_2, 
-	    MD_5, 
-	    _HAVAL, 
-	    HAVAL_3, 
-	    HAVAL_4, 
-	    HAVAL_5,
-            RIPEMD_160, 
-	    _TIGER, 
-#ifndef __WXMAC__    
-            PANAMA_HASH,
-#endif   
-            _CRC32, 
-	    SAPPHIRE_HASH };
+
+
+
+    
   
-	HashModule * hash;
+	SecByteBlock hash;
 
 	switch (m_listhash->GetSelection())
 	{
@@ -394,21 +493,19 @@ void MyFrame::OnHash(wxCommandEvent& event)
 	case(HAVAL_3): hash = new HAVAL3; break;
 	case(HAVAL_4): hash = new HAVAL4; break;
 	case(HAVAL_5): hash = new HAVAL5; break;
-        case(_CRC32): hash = new CRC32; break;
-        case(SAPPHIRE_HASH): hash = new SapphireHash; break;
-        case(RIPEMD_160): hash = new RIPEMD160; break;
+    case(_CRC32): hash = new CRC32; break;
+    case(SAPPHIRE_HASH): hash = new SapphireHash; break;
+    case(RIPEMD_160): hash = new RIPEMD160; break;
 	case(_TIGER): hash = new Tiger; break;
 #ifndef __WXMAC__
-#ifdef IS_LITTLE_ENDIAN
-	case(PANAMA_HASH): hash = new PanamaHash<false>; break;
-#else
-    case(PANAMA_HASH): hash = new PanamaHash<true>; break;
-#endif
+	case(PANAMA_HASH): hash = new PanamaHash; break;
 #endif		     
 	default: hash = new SHA256;
 	}
 
  	string outstring;
+
+
 
     HashFilter * hashFilter;
 
@@ -428,7 +525,7 @@ void MyFrame::OnHash(wxCommandEvent& event)
 
 	m_hashout->SetValue(outstring.c_str());
     SetStatusText("Hashing...Done!");
-
+  */
 }
 
 void MyFrame::On64(wxCommandEvent& event)
